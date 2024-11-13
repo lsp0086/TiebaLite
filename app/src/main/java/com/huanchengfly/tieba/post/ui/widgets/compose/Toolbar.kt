@@ -7,6 +7,7 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
@@ -16,8 +17,10 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsTopHeight
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -31,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
@@ -186,6 +190,16 @@ fun Toolbar(
         content = content
     )
 }
+
+@Composable
+inline fun CenterBox(
+    modifier: Modifier = Modifier,
+    propagateMinConstraints: Boolean = false,
+    content: @Composable BoxScope.() -> Unit
+) {
+    Box(modifier, Alignment.Center, propagateMinConstraints, content)
+}
+
 @Composable
 inline fun CenterRow(
     modifier: Modifier = Modifier,
@@ -299,26 +313,21 @@ fun Toolbar(
 ) {
     TopAppBarContainer(
         topBar = {
-            TopAppBar(
-                title = {
+            Box(Modifier.fillMaxWidth().wrapContentHeight().background(backgroundColor)){
+                ProvideContentColor(color = contentColor) {
+                    navigationIcon?.invoke()
+                }.takeIf { navigationIcon != null }
+                Row (Modifier.align(Alignment.Center)) {
                     ProvideTextStyle(value = MaterialTheme.typography.h6.copy(fontWeight = FontWeight.Bold)) {
                         ProvideContentColor(color = contentColor, content = title)
                     }
-                },
-                actions = {
+                }
+                Row (Modifier.align(Alignment.CenterEnd).padding(end = 8.dp)) {
                     ProvideContentColor(color = contentColor) {
                         actions()
                     }
-                },
-                navigationIcon = (@Composable {
-                    ProvideContentColor(color = contentColor) {
-                        navigationIcon?.invoke()
-                    }
-                }).takeIf { navigationIcon != null },
-                backgroundColor = backgroundColor,
-                contentColor = contentColor,
-                elevation = 0.dp
-            )
+                }
+            }
         },
         content = content
     )
