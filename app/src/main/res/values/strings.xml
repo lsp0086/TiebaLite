@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">贴吧 Lite</string>
     <string name="title_notifications">消息</string>
-    <string name="title_explore">动态</string>
+    <string name="title_explore">进吧</string>
     <string name="title_user">我</string>
     <string name="title_search">搜索</string>
     <string name="hint_search">发现更多</string>

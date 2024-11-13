@@ -1,4 +1,4 @@
-package com.huanchengfly.tieba.post.ui.page.main.home
+package com.huanchengfly.tieba.post.ui.page.main.explore
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
@@ -35,10 +35,10 @@ import kotlinx.coroutines.flow.zip
 import org.litepal.LitePal
 
 @Stable
-class HomeViewModel : BaseViewModel<HomeUiIntent, HomePartialChange, HomeUiState, HomeUiEvent>() {
-    override fun createInitialState(): HomeUiState = HomeUiState()
+class ExploreViewModel : BaseViewModel<ExploreUiIntent, HomePartialChange, ExploreUiState, HomeUiEvent>() {
+    override fun createInitialState(): ExploreUiState = ExploreUiState()
 
-    override fun createPartialChangeProducer(): PartialChangeProducer<HomeUiIntent, HomePartialChange, HomeUiState> =
+    override fun createPartialChangeProducer(): PartialChangeProducer<ExploreUiIntent, HomePartialChange, ExploreUiState> =
         HomePartialChangeProducer
 
     override fun dispatchEvent(partialChange: HomePartialChange): UiEvent? =
@@ -49,21 +49,21 @@ class HomeViewModel : BaseViewModel<HomeUiIntent, HomePartialChange, HomeUiState
         }
 
     object HomePartialChangeProducer :
-        PartialChangeProducer<HomeUiIntent, HomePartialChange, HomeUiState> {
+        PartialChangeProducer<ExploreUiIntent, HomePartialChange, ExploreUiState> {
         @OptIn(ExperimentalCoroutinesApi::class)
-        override fun toPartialChangeFlow(intentFlow: Flow<HomeUiIntent>): Flow<HomePartialChange> {
+        override fun toPartialChangeFlow(intentFlow: Flow<ExploreUiIntent>): Flow<HomePartialChange> {
             return merge(
-                intentFlow.filterIsInstance<HomeUiIntent.Refresh>()
+                intentFlow.filterIsInstance<ExploreUiIntent.Refresh>()
                     .flatMapConcat { produceRefreshPartialChangeFlow() },
-                intentFlow.filterIsInstance<HomeUiIntent.RefreshHistory>()
+                intentFlow.filterIsInstance<ExploreUiIntent.RefreshHistory>()
                     .flatMapConcat { produceRefreshHistoryPartialChangeFlow() },
-                intentFlow.filterIsInstance<HomeUiIntent.TopForums.Delete>()
+                intentFlow.filterIsInstance<ExploreUiIntent.TopForums.Delete>()
                     .flatMapConcat { it.toPartialChangeFlow() },
-                intentFlow.filterIsInstance<HomeUiIntent.TopForums.Add>()
+                intentFlow.filterIsInstance<ExploreUiIntent.TopForums.Add>()
                     .flatMapConcat { it.toPartialChangeFlow() },
-                intentFlow.filterIsInstance<HomeUiIntent.Unfollow>()
+                intentFlow.filterIsInstance<ExploreUiIntent.Unfollow>()
                     .flatMapConcat { it.toPartialChangeFlow() },
-                intentFlow.filterIsInstance<HomeUiIntent.ToggleHistory>()
+                intentFlow.filterIsInstance<ExploreUiIntent.ToggleHistory>()
                     .flatMapConcat { it.toPartialChangeFlow() }
             )
         }
@@ -75,7 +75,7 @@ class HomeViewModel : BaseViewModel<HomeUiIntent, HomePartialChange, HomeUiState
                     TiebaApi.getInstance().forumRecommendNewFlow()
                 ) { historyForums, forumRecommend ->
                     val forums = forumRecommend.data_?.like_forum?.map {
-                        HomeUiState.Forum(
+                        ExploreUiState.Forum(
                             it.avatar,
                             it.forum_id.toString(),
                             it.forum_name,
@@ -83,7 +83,7 @@ class HomeViewModel : BaseViewModel<HomeUiIntent, HomePartialChange, HomeUiState
                             it.level_id.toString()
                         )
                     } ?: emptyList()
-                    val topForums = mutableListOf<HomeUiState.Forum>()
+                    val topForums = mutableListOf<ExploreUiState.Forum>()
                     val topForumsDB = LitePal.findAll(TopForum::class.java).map { it.forumId }
                     topForums.addAll(forums.filter { topForumsDB.contains(it.forumId) })
                     HomePartialChange.Refresh.Success(
@@ -101,7 +101,7 @@ class HomeViewModel : BaseViewModel<HomeUiIntent, HomePartialChange, HomeUiState
                 .map { HomePartialChange.RefreshHistory.Success(it) as HomePartialChange.RefreshHistory }
                 .catch { emit(HomePartialChange.RefreshHistory.Failure(it)) }
 
-        private fun HomeUiIntent.TopForums.Delete.toPartialChangeFlow() =
+        private fun ExploreUiIntent.TopForums.Delete.toPartialChangeFlow() =
             flow {
                 val deletedRows = LitePal.deleteAll(TopForum::class.java, "forumId = ?", forumId)
                 if (deletedRows > 0) {
@@ -112,7 +112,7 @@ class HomeViewModel : BaseViewModel<HomeUiIntent, HomePartialChange, HomeUiState
             }.flowOn(Dispatchers.IO)
                 .catch { emit(HomePartialChange.TopForums.Delete.Failure(it.getErrorMessage())) }
 
-        private fun HomeUiIntent.TopForums.Add.toPartialChangeFlow() =
+        private fun ExploreUiIntent.TopForums.Add.toPartialChangeFlow() =
             flow {
                 val success = TopForum(forum.forumId).saveOrUpdate("forumId = ?", forum.forumId)
                 if (success) {
@@ -123,7 +123,7 @@ class HomeViewModel : BaseViewModel<HomeUiIntent, HomePartialChange, HomeUiState
             }.flowOn(Dispatchers.IO)
                 .catch { emit(HomePartialChange.TopForums.Add.Failure(it.getErrorMessage())) }
 
-        private fun HomeUiIntent.Unfollow.toPartialChangeFlow() =
+        private fun ExploreUiIntent.Unfollow.toPartialChangeFlow() =
             TiebaApi.getInstance()
                 .unlikeForumFlow(forumId, forumName, AccountUtil.getLoginInfo()!!.tbs)
                 .map<CommonResponse, HomePartialChange.Unfollow> {
@@ -131,30 +131,30 @@ class HomeViewModel : BaseViewModel<HomeUiIntent, HomePartialChange, HomeUiState
                 }
                 .catch { emit(HomePartialChange.Unfollow.Failure(it.getErrorMessage())) }
 
-        private fun HomeUiIntent.ToggleHistory.toPartialChangeFlow() =
+        private fun ExploreUiIntent.ToggleHistory.toPartialChangeFlow() =
             flowOf(HomePartialChange.ToggleHistory(!currentExpand))
     }
 }
 
-sealed interface HomeUiIntent : UiIntent {
-    data object Refresh : HomeUiIntent
+sealed interface ExploreUiIntent : UiIntent {
+    data object Refresh : ExploreUiIntent
 
-    data object RefreshHistory : HomeUiIntent
+    data object RefreshHistory : ExploreUiIntent
 
-    data class Unfollow(val forumId: String, val forumName: String) : HomeUiIntent
+    data class Unfollow(val forumId: String, val forumName: String) : ExploreUiIntent
 
-    sealed interface TopForums : HomeUiIntent {
+    sealed interface TopForums : ExploreUiIntent {
         data class Delete(val forumId: String) : TopForums
 
-        data class Add(val forum: HomeUiState.Forum) : TopForums
+        data class Add(val forum: ExploreUiState.Forum) : TopForums
     }
 
-    data class ToggleHistory(val currentExpand: Boolean) : HomeUiIntent
+    data class ToggleHistory(val currentExpand: Boolean) : ExploreUiIntent
 }
 
-sealed interface HomePartialChange : PartialChange<HomeUiState> {
+sealed interface HomePartialChange : PartialChange<ExploreUiState> {
     sealed class Unfollow : HomePartialChange {
-        override fun reduce(oldState: HomeUiState): HomeUiState =
+        override fun reduce(oldState: ExploreUiState): ExploreUiState =
             when (this) {
                 is Success -> {
                     oldState.copy(
@@ -174,7 +174,7 @@ sealed interface HomePartialChange : PartialChange<HomeUiState> {
     }
 
     sealed class Refresh : HomePartialChange {
-        override fun reduce(oldState: HomeUiState): HomeUiState =
+        override fun reduce(oldState: ExploreUiState): ExploreUiState =
             when (this) {
                 is Success -> oldState.copy(
                     isLoading = false,
@@ -191,8 +191,8 @@ sealed interface HomePartialChange : PartialChange<HomeUiState> {
         data object Start : Refresh()
 
         data class Success(
-            val forums: List<HomeUiState.Forum>,
-            val topForums: List<HomeUiState.Forum>,
+            val forums: List<ExploreUiState.Forum>,
+            val topForums: List<ExploreUiState.Forum>,
             val historyForums: List<History>,
         ) : Refresh()
 
@@ -202,7 +202,7 @@ sealed interface HomePartialChange : PartialChange<HomeUiState> {
     }
 
     sealed class RefreshHistory : HomePartialChange {
-        override fun reduce(oldState: HomeUiState): HomeUiState =
+        override fun reduce(oldState: ExploreUiState): ExploreUiState =
             when (this) {
                 is Success -> oldState.copy(
                     historyForums = historyForums.toImmutableList(),
@@ -222,7 +222,7 @@ sealed interface HomePartialChange : PartialChange<HomeUiState> {
 
     sealed interface TopForums : HomePartialChange {
         sealed interface Delete : HomePartialChange {
-            override fun reduce(oldState: HomeUiState): HomeUiState =
+            override fun reduce(oldState: ExploreUiState): ExploreUiState =
                 when (this) {
                     is Success -> oldState.copy(topForums = oldState.topForums.filterNot { it.forumId == forumId }
                         .toImmutableList())
@@ -236,7 +236,7 @@ sealed interface HomePartialChange : PartialChange<HomeUiState> {
         }
 
         sealed interface Add : HomePartialChange {
-            override fun reduce(oldState: HomeUiState): HomeUiState =
+            override fun reduce(oldState: ExploreUiState): ExploreUiState =
                 when (this) {
                     is Success -> {
                         val topForumsId = oldState.topForums.map { it.forumId }.toMutableList()
@@ -250,20 +250,20 @@ sealed interface HomePartialChange : PartialChange<HomeUiState> {
                     is Failure -> oldState
                 }
 
-            data class Success(val forum: HomeUiState.Forum) : Add
+            data class Success(val forum: ExploreUiState.Forum) : Add
 
             data class Failure(val errorMessage: String) : Add
         }
     }
 
     data class ToggleHistory(val expand: Boolean) : HomePartialChange {
-        override fun reduce(oldState: HomeUiState): HomeUiState =
+        override fun reduce(oldState: ExploreUiState): ExploreUiState =
             oldState.copy(expandHistoryForum = expand)
     }
 }
 
 @Immutable
-data class HomeUiState(
+data class ExploreUiState(
     val isLoading: Boolean = true,
     val forums: ImmutableList<Forum> = persistentListOf(),
     val topForums: ImmutableList<Forum> = persistentListOf(),

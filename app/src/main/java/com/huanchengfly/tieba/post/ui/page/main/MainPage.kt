@@ -142,13 +142,7 @@ fun MainPage(
                     icon = { AnimatedImageVector.animatedVectorResource(id = R.drawable.ic_animated_rounded_inventory_2) },
                     title = { stringResource(id = R.string.title_main) },
                     content = {
-                        HomePage(
-                            canOpenExplore = !LocalContext.current.appPreferences.hideExplore
-                        ) {
-                            coroutineScope.launch {
-                                pagerState.scrollToPage(1)
-                            }
-                        }
+                        HomePage()
                     }
                 ),
                 if (hideExplore) null
@@ -159,7 +153,13 @@ fun MainPage(
                     },
                     title = { stringResource(id = R.string.title_explore) },
                     content = {
-                        ExplorePage()
+                        ExplorePage(
+                            canOpenExplore = !LocalContext.current.appPreferences.hideExplore
+                        ) {
+                            coroutineScope.launch {
+                                pagerState.scrollToPage(1)
+                            }
+                        }
                     }
                 ),
                 NavigationItem(
