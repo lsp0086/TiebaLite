@@ -84,7 +84,6 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.MenuState
 import com.huanchengfly.tieba.post.ui.widgets.compose.MyLazyVerticalGrid
 import com.huanchengfly.tieba.post.ui.widgets.compose.MyScaffold
 import com.huanchengfly.tieba.post.ui.widgets.compose.Toolbar
-import com.huanchengfly.tieba.post.ui.widgets.compose.accountNavIconIfCompact
 import com.huanchengfly.tieba.post.ui.widgets.compose.rememberDialogState
 import com.huanchengfly.tieba.post.ui.widgets.compose.rememberMenuState
 import com.huanchengfly.tieba.post.ui.widgets.compose.states.StateScreen
@@ -458,7 +457,6 @@ fun ExplorePage(
         topBar = {
             Toolbar(
                 title = stringResource(id = R.string.title_explore),
-                navigationIcon = accountNavIconIfCompact(),
                 actions = {
                     ActionItem(
                         icon = ImageVector.vectorResource(id = R.drawable.ic_oksign),

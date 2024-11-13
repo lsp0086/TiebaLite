@@ -161,7 +161,6 @@ fun NavigationDrawerContent(
                             .fillMaxWidth()
                             .padding(top = 16.dp)
                     ) {
-                        AccountNavIcon(spacer = false, size = Sizes.Large)
                         Text(
                             text = account.nameShow ?: account.name,
                             style = MaterialTheme.typography.subtitle1,
@@ -304,9 +303,6 @@ fun NavigationRail(
             .fillMaxHeight()
             .statusBarsPadding(),
         elevation = 0.dp,
-        header = {
-            AccountNavIcon(spacer = false)
-        }
     ) {
         Column(
             modifier = Modifier.fillMaxHeight(),

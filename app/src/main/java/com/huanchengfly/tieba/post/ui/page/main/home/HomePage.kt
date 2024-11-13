@@ -63,7 +63,6 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.TabRow
 import com.huanchengfly.tieba.post.ui.widgets.compose.TextButton
 import com.huanchengfly.tieba.post.ui.widgets.compose.TipScreen
 import com.huanchengfly.tieba.post.ui.widgets.compose.Toolbar
-import com.huanchengfly.tieba.post.ui.widgets.compose.accountNavIconIfCompact
 import com.huanchengfly.tieba.post.utils.AccountUtil.LocalAccount
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
@@ -217,7 +216,6 @@ fun HomePage() {
         topBar = {
             Toolbar(
                 title = stringResource(id = R.string.title_main),
-                navigationIcon = accountNavIconIfCompact(),
                 actions = {
                     ActionItem(
                         icon = Icons.Rounded.Search,

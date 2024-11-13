@@ -29,7 +29,6 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.PagerTabIndicator
 import com.huanchengfly.tieba.post.ui.widgets.compose.TabRow
 import com.huanchengfly.tieba.post.ui.widgets.compose.TitleCentredToolbar
 import com.huanchengfly.tieba.post.ui.widgets.compose.Toolbar
-import com.huanchengfly.tieba.post.ui.widgets.compose.accountNavIconIfCompact
 import com.ramcosta.composedestinations.annotation.DeepLink
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -135,7 +134,6 @@ fun NotificationsPage(
         topBar = {
             Toolbar(
                 title = stringResource(id = R.string.title_notifications),
-                navigationIcon = accountNavIconIfCompact(),
                 actions = {
                     ActionItem(
                         icon = Icons.Rounded.Search,
