@@ -5,11 +5,14 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -20,6 +23,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -58,6 +62,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
@@ -108,58 +113,43 @@ private fun ForumItemContent(
 ) {
     Row(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 12.dp),
+            .fillMaxWidth(0.5f)
+            .padding(start = 16.dp, end = 8.dp, top = 12.dp, bottom = 12.dp),
     ) {
         AnimatedVisibility(visible = showAvatar) {
             Row {
-                Avatar(data = item.avatar, size = 40.dp, contentDescription = null)
-                Spacer(modifier = Modifier.width(14.dp))
+                Avatar(data = item.avatar, size = 22.dp, contentDescription = null)
+                Spacer(modifier = Modifier.width(5.dp))
             }
         }
         Text(
             color = ExtendedTheme.colors.text,
             text = item.forumName,
             modifier = Modifier
-                .weight(1f)
-                .align(CenterVertically),
-            fontSize = 15.sp,
+                .align(CenterVertically).weight(1f),
+            fontSize = 12.5.sp,
             fontWeight = FontWeight.Bold,
+            overflow = TextOverflow.Ellipsis,
             maxLines = 1,
         )
         Spacer(modifier = Modifier.width(8.dp))
-        Box(
-            modifier = Modifier
-                .width(54.dp)
-                .background(
-                    color = ExtendedTheme.colors.chip,
-                    shape = RoundedCornerShape(3.dp)
-                )
-                .padding(vertical = 4.dp)
-                .align(CenterVertically)
-        ) {
-            Row(
-                modifier = Modifier.align(Center),
-            ) {
-                Text(
-                    text = "Lv.${item.levelId}",
-                    color = ExtendedTheme.colors.onChip,
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.align(CenterVertically)
-                )
-                if (item.isSign) {
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Icon(
-                        imageVector = Icons.Rounded.Check,
-                        contentDescription = stringResource(id = R.string.tip_signed),
-                        modifier = Modifier
-                            .size(12.dp)
-                            .align(CenterVertically),
-                        tint = ExtendedTheme.colors.onChip
-                    )
-                }
-            }
+        Box((if(item.isSign) Modifier.border(1.dp, Color.Black, CircleShape) else Modifier)
+            .background(
+                color = ExtendedTheme.colors.chip,
+                shape = CircleShape,
+            )
+            .size(20.dp)
+            .weight(1f, fill = false)
+            .padding(vertical = 4.dp)
+            .align(CenterVertically))
+        {
+            Text(
+                text = item.levelId,
+                color = ExtendedTheme.colors.onChip,
+                fontSize = 11.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.align(Center)
+            )
         }
     }
 }
@@ -381,7 +371,7 @@ private fun ExploreSkeletonScreen(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalLayoutApi::class)
 @Composable
 fun ExplorePage(
     viewModel: ExploreViewModel = pageViewModel<ExploreUiIntent, ExploreViewModel>(listOf(
@@ -650,27 +640,28 @@ fun ExplorePage(
                                 }
                             }
                         }
-                        items(
-                            items = forums,
-                            key = { it.forumId }
-                        ) { item ->
-                            ForumItem(
-                                item,
-                                listSingle,
-                                onClick = {
-                                    navigator.navigate(ForumPageDestination(it.forumName))
-                                },
-                                onUnfollow = {
-                                    unfollowForum = it
-                                    confirmUnfollowDialog.show()
-                                },
-                                onAddTopForum = {
-                                    viewModel.send(ExploreUiIntent.TopForums.Add(it))
-                                },
-                                onDeleteTopForum = {
-                                    viewModel.send(ExploreUiIntent.TopForums.Delete(it.forumId))
+                        item (key = "Followed") {
+                            FlowRow (Modifier.fillMaxWidth()) {
+                                forums.forEach{ item ->
+                                    ForumItem(
+                                        item,
+                                        listSingle,
+                                        onClick = {
+                                            navigator.navigate(ForumPageDestination(it.forumName))
+                                        },
+                                        onUnfollow = {
+                                            unfollowForum = it
+                                            confirmUnfollowDialog.show()
+                                        },
+                                        onAddTopForum = {
+                                            viewModel.send(ExploreUiIntent.TopForums.Add(it))
+                                        },
+                                        onDeleteTopForum = {
+                                            viewModel.send(ExploreUiIntent.TopForums.Delete(it.forumId))
+                                        }
+                                    )
                                 }
-                            )
+                            }
                         }
                     }
                 }
