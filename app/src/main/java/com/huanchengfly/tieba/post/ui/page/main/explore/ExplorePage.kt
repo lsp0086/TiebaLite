@@ -114,7 +114,7 @@ private fun ForumItemContent(
     Row(
         modifier = Modifier
             .fillMaxWidth(0.5f)
-            .padding(start = 16.dp, end = 8.dp, top = 12.dp, bottom = 12.dp),
+            .padding(horizontal = 16.dp, vertical = 2.dp),
     ) {
         AnimatedVisibility(visible = showAvatar) {
             Row {
@@ -139,7 +139,6 @@ private fun ForumItemContent(
                 shape = CircleShape,
             )
             .size(20.dp)
-            .weight(1f, fill = false)
             .padding(vertical = 4.dp)
             .align(CenterVertically))
         {
