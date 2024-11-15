@@ -29,6 +29,7 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.GenericShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
@@ -94,7 +95,8 @@ import com.huanchengfly.tieba.post.utils.ImageUtil
 import com.huanchengfly.tieba.post.utils.TiebaUtil
 import com.huanchengfly.tieba.post.utils.appPreferences
 import kotlinx.collections.immutable.persistentListOf
-
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Path
 
 @Immutable
 data class ExplorePageItem(
@@ -102,7 +104,20 @@ data class ExplorePageItem(
     val name: @Composable (selected: Boolean) -> Unit,
     val content: @Composable () -> Unit,
 )
+val DiamondShape = GenericShape { size: Size, _ ->
+    val path = Path().apply {
+        // 上半部分梯形
+        moveTo(0f, size.height * 0.45f)
+        lineTo(size.width * 0.3f, size.height * 0.2f) // 顶点
+        lineTo(size.width * 0.7f, size.height * 0.2f) // 右上角
+        lineTo(size.width, size.height * 0.45f) // 右下角
 
+        // 下半部分三角形
+        lineTo(size.width * 0.5f, size.height) // 底部中心
+        close() // 闭合路径
+    }
+    addPath(path)
+}
 @Composable
 private fun ForumItemContent(
     item: ExploreUiState.Forum
@@ -121,16 +136,30 @@ private fun ForumItemContent(
             text = item.forumName,
             modifier = Modifier
                 .align(CenterVertically).weight(1f),
-            fontSize = 12.5.sp,
+            fontSize = 10.sp,
             fontWeight = FontWeight.Bold,
             overflow = TextOverflow.Ellipsis,
             maxLines = 1,
         )
         Spacer(modifier = Modifier.width(8.dp))
-        Box((if(item.isSign) Modifier.border(1.dp, Color.Black, CircleShape) else Modifier)
+        //11,220,180
+        //120,175,255
+        //250,210,50
+        //240,155,30
+        val intLvId = item.levelId.toIntOrNull() ?: 0
+        val boxColor = if (intLvId < 4){
+            Color(11,220,180,255)
+        }else if (intLvId < 10){
+            Color(120,175,255,255)
+        }else if (intLvId < 16){
+            Color(250,210,50,255,)
+        }else{
+            Color(240,155,30,255)
+        }
+        Box((if(item.isSign) Modifier.border(1.dp, Color.Black, DiamondShape) else Modifier)
             .background(
-                color = ExtendedTheme.colors.chip,
-                shape = CircleShape,
+                color = boxColor,
+                shape = DiamondShape,
             )
             .size(20.dp)
             .padding(vertical = 4.dp)
@@ -138,8 +167,8 @@ private fun ForumItemContent(
         {
             Text(
                 text = item.levelId,
-                color = ExtendedTheme.colors.onChip,
-                fontSize = 11.sp,
+                color = Color.White,
+                fontSize = 10.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.align(Center)
             )
