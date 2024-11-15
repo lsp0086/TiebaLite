@@ -27,13 +27,13 @@ const val BOUNDARY = "--------7da3d81520810*"
 
 fun buildProtobufRequestBody(
     data: Message<*, *>,
-    clientVersion: ClientVersion = ClientVersion.TIEBA_V11,
+    clientVersion: ClientVersion = ClientVersion.TIE_BA_V11,
     needSToken: Boolean = true,
 ): MyMultipartBody {
     return MyMultipartBody.Builder(BOUNDARY)
         .apply {
             setType(MyMultipartBody.FORM)
-            if (clientVersion != ClientVersion.TIEBA_V12 && clientVersion != ClientVersion.TIEBA_V12_POST) {
+            if (clientVersion != ClientVersion.TIE_BA_V12 && clientVersion != ClientVersion.TIE_BA_V12_POST) {
                 addFormDataPart(Param.CLIENT_VERSION, clientVersion.version)
             }
             if (needSToken) {
@@ -69,12 +69,12 @@ fun buildAppPosInfo(): AppPosInfo {
 
 fun buildCommonRequest(
     context: Context = App.INSTANCE,
-    clientVersion: ClientVersion = ClientVersion.TIEBA_V11,
+    clientVersion: ClientVersion = ClientVersion.TIE_BA_V11,
     bduss: String? = null,
     stoken: String? = null,
     tbs: String? = null,
 ): CommonRequest = when (clientVersion) {
-    ClientVersion.TIEBA_V11 -> {
+    ClientVersion.TIE_BA_V11 -> {
         CommonRequest(
             BDUSS = bduss ?: AccountUtil.getBduss(),
             _client_id = ClientUtils.clientId ?: RetrofitTiebaApi.randomClientId,
@@ -100,7 +100,7 @@ fun buildCommonRequest(
         )
     }
 
-    ClientVersion.TIEBA_V12 -> {
+    ClientVersion.TIE_BA_V12 -> {
         CommonRequest(
             BDUSS = AccountUtil.getBduss(),
             _client_id = ClientUtils.clientId ?: RetrofitTiebaApi.randomClientId,
@@ -149,7 +149,7 @@ fun buildCommonRequest(
         )
     }
 
-    ClientVersion.TIEBA_V12_POST -> {
+    ClientVersion.TIE_BA_V12_POST -> {
         CommonRequest(
             BDUSS = AccountUtil.getBduss(),
             _client_id = ClientUtils.clientId ?: RetrofitTiebaApi.randomClientId,

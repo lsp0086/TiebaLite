@@ -80,7 +80,7 @@ object RetrofitTiebaApi {
     private val gsonConverterFactory = GsonConverterFactory.create()
     private val sortAndSignInterceptor = SortAndSignInterceptor("tiebaclient!!!")
 
-    val NEW_TIEBA_API: NewTiebaApi by lazy {
+    val NEW_TIE_BA_API: NewTiebaApi by lazy {
         createJsonApi<NewTiebaApi>(
             "http://c.tieba.baidu.com/",
             defaultCommonHeaderInterceptor,
@@ -97,7 +97,7 @@ object RetrofitTiebaApi {
         )
     }
 
-    val WEB_TIEBA_API: WebTiebaApi by lazy {
+    val WEB_TIE_BA_API: WebTiebaApi by lazy {
         createJsonApi<WebTiebaApi>("https://tieba.baidu.com/",
             CommonHeaderInterceptor(
                 Header.USER_AGENT to { getUserAgent("tieba/11.10.8.6 skin/default") },
@@ -113,7 +113,7 @@ object RetrofitTiebaApi {
         )
     }
 
-    val HYBRID_TIEBA_API: AppHybridTiebaApi by lazy {
+    val HYBRID_TIE_BA_API: AppHybridTiebaApi by lazy {
         createJsonApi<AppHybridTiebaApi>("https://tieba.baidu.com/",
             CommonHeaderInterceptor(
                 Header.USER_AGENT to { getUserAgent("tieba/12.35.1.0 skin/default") },
@@ -153,7 +153,7 @@ object RetrofitTiebaApi {
         )
     }
 
-    val MINI_TIEBA_API: MiniTiebaApi by lazy {
+    val MINI_TIE_BA_API: MiniTiebaApi by lazy {
         createJsonApi<MiniTiebaApi>(
             "http://c.tieba.baidu.com/",
             defaultCommonHeaderInterceptor,
@@ -173,7 +173,7 @@ object RetrofitTiebaApi {
         )
     }
 
-    val OFFICIAL_TIEBA_API: OfficialTiebaApi by lazy {
+    val OFFICIAL_TIE_BA_API: OfficialTiebaApi by lazy {
         createJsonApi<OfficialTiebaApi>(
             "http://c.tieba.baidu.com/",
             CommonHeaderInterceptor(
@@ -223,7 +223,7 @@ object RetrofitTiebaApi {
         )
     }
 
-    val OFFICIAL_PROTOBUF_TIEBA_API: OfficialProtobufTiebaApi by lazy {
+    val OFFICIAL_PROTOBUF_TIE_BA_API: OfficialProtobufTiebaApi by lazy {
         createProtobufApi<OfficialProtobufTiebaApi>(
             "https://tiebac.baidu.com/",
             CommonHeaderInterceptor(
@@ -235,7 +235,7 @@ object RetrofitTiebaApi {
                 Header.CUID_GALAXY2 to { CuidUtils.getNewCuid() },
                 Header.CUID_GID to { "" },
                 Header.CUID_GALAXY3 to { UIDUtil.getAid() },
-                Header.USER_AGENT to { "bdtb for Android ${ClientVersion.TIEBA_V11.version}" },
+                Header.USER_AGENT to { "bdtb for Android ${ClientVersion.TIE_BA_V11.version}" },
                 Header.X_BD_DATA_TYPE to { "protobuf" },
             ),
             defaultCommonParamInterceptor - Param.OS_VERSION + CommonParamInterceptor(
@@ -243,7 +243,7 @@ object RetrofitTiebaApi {
                 Param.CUID_GALAXY2 to { CuidUtils.getNewCuid() },
                 Param.CUID_GID to { "" },
                 Param.FROM to { "tieba" },
-                Param.CLIENT_VERSION to { ClientVersion.TIEBA_V11.version },
+                Param.CLIENT_VERSION to { ClientVersion.TIE_BA_V11.version },
                 Param.CUID_GALAXY3 to { UIDUtil.getAid() },
                 Param.OAID to { OAID().toJson() },
             ),
@@ -251,7 +251,7 @@ object RetrofitTiebaApi {
         )
     }
 
-    val OFFICIAL_PROTOBUF_TIEBA_V12_API: OfficialProtobufTiebaApi by lazy {
+    val OFFICIAL_PROTOBUF_TIE_BA_V12_API: OfficialProtobufTiebaApi by lazy {
         createProtobufApi<OfficialProtobufTiebaApi>(
             "https://tiebac.baidu.com/",
             CommonHeaderInterceptor(
@@ -269,14 +269,14 @@ object RetrofitTiebaApi {
                 Header.CUID_GALAXY2 to { CuidUtils.getNewCuid() },
                 Header.CUID_GID to { "" },
                 Header.CUID_GALAXY3 to { UIDUtil.getAid() },
-                Header.USER_AGENT to { getUserAgent("tieba/${ClientVersion.TIEBA_V12.version}") },
+                Header.USER_AGENT to { getUserAgent("tieba/${ClientVersion.TIE_BA_V12.version}") },
                 Header.X_BD_DATA_TYPE to { "protobuf" },
             ),
             stParamInterceptor,
         )
     }
 
-    val OFFICIAL_PROTOBUF_TIEBA_POST_API: OfficialProtobufTiebaApi by lazy {
+    val OFFICIAL_PROTOBUF_TIE_BA_POST_API: OfficialProtobufTiebaApi by lazy {
         createProtobufApi<OfficialProtobufTiebaApi>(
             "https://tiebac.baidu.com/",
             CommonHeaderInterceptor(
@@ -295,11 +295,11 @@ object RetrofitTiebaApi {
                 Header.CUID_GALAXY2 to { CuidUtils.getNewCuid() },
                 Header.CUID_GID to { "" },
                 Header.CUID_GALAXY3 to { UIDUtil.getAid() },
-                Header.USER_AGENT to { getUserAgent("tieba/${ClientVersion.TIEBA_V12_POST.version}") },
+                Header.USER_AGENT to { getUserAgent("tieba/${ClientVersion.TIE_BA_V12_POST.version}") },
                 Header.X_BD_DATA_TYPE to { "protobuf" },
             ),
             defaultCommonParamInterceptor - Param.OS_VERSION + CommonParamInterceptor(
-                Param.CLIENT_VERSION to { ClientVersion.TIEBA_V12_POST.version },
+                Param.CLIENT_VERSION to { ClientVersion.TIE_BA_V12_POST.version },
                 Param.ACTIVE_TIMESTAMP to { ClientUtils.activeTimestamp.toString() },
                 Param.ANDROID_ID to { base64Encode(UIDUtil.getAndroidId("000")) },
                 Param.BAIDU_ID to { ClientUtils.baiduId },
