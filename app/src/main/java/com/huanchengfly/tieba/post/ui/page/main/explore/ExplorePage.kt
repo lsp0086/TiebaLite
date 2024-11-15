@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -37,8 +36,6 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
-import androidx.compose.material.icons.outlined.ViewAgenda
-import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -108,19 +105,16 @@ data class ExplorePageItem(
 
 @Composable
 private fun ForumItemContent(
-    item: ExploreUiState.Forum,
-    showAvatar: Boolean
+    item: ExploreUiState.Forum
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth(0.5f)
-            .padding(horizontal = 16.dp, vertical = 2.dp),
+            .padding(horizontal = 16.dp, vertical = 12.dp),
     ) {
-        AnimatedVisibility(visible = showAvatar) {
-            Row {
-                Avatar(data = item.avatar, size = 22.dp, contentDescription = null)
-                Spacer(modifier = Modifier.width(5.dp))
-            }
+        Row {
+            Avatar(data = item.avatar, size = 32.dp, contentDescription = null, shape = RoundedCornerShape(10.dp))
+            Spacer(modifier = Modifier.width(8.dp))
         }
         Text(
             color = ExtendedTheme.colors.text,
@@ -199,7 +193,6 @@ private fun ForumItemMenuContent(
 @Composable
 private fun ForumItem(
     item: ExploreUiState.Forum,
-    showAvatar: Boolean,
     onClick: (ExploreUiState.Forum) -> Unit,
     onUnfollow: (ExploreUiState.Forum) -> Unit,
     onAddTopForum: (ExploreUiState.Forum) -> Unit,
@@ -226,7 +219,7 @@ private fun ForumItem(
             onClick(item)
         }
     ) {
-        ForumItemContent(item = item, showAvatar = showAvatar)
+        ForumItemContent(item = item)
     }
 }
 
@@ -409,7 +402,7 @@ fun ExplorePage(
     val isEmpty by remember { derivedStateOf { forums.isEmpty() } }
     val hasTopForum by remember { derivedStateOf { topForums.isNotEmpty() } }
     val showHistoryForum by remember { derivedStateOf { context.appPreferences.homePageShowHistoryForum && historyForums.isNotEmpty() } }
-    var listSingle by remember { mutableStateOf(context.appPreferences.listSingle) }
+    val listSingle by remember { mutableStateOf(context.appPreferences.listSingle) }
     val isError by remember { derivedStateOf { error != null } }
     val gridCells by remember { derivedStateOf { getGridCells(context, listSingle) } }
 
@@ -452,13 +445,6 @@ fun ExplorePage(
                         contentDescription = stringResource(id = R.string.title_oksign)
                     ) {
                         TiebaUtil.startSign(context)
-                    }
-                    ActionItem(
-                        icon = Icons.Outlined.ViewAgenda,
-                        contentDescription = stringResource(id = R.string.title_switch_list_single)
-                    ) {
-                        context.appPreferences.listSingle = !listSingle
-                        listSingle = !listSingle
                     }
                 }
             )
@@ -612,7 +598,6 @@ fun ExplorePage(
                             ) { item ->
                                 ForumItem(
                                     item,
-                                    listSingle,
                                     onClick = {
                                         navigator.navigate(ForumPageDestination(it.forumName))
                                     },
@@ -644,7 +629,6 @@ fun ExplorePage(
                                 forums.forEach{ item ->
                                     ForumItem(
                                         item,
-                                        listSingle,
                                         onClick = {
                                             navigator.navigate(ForumPageDestination(it.forumName))
                                         },
