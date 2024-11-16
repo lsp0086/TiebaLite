@@ -1,7 +1,5 @@
 package com.huanchengfly.tieba.post.ui.page.main.explore
 
-import android.content.Context
-import android.util.Log
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import com.huanchengfly.tieba.post.api.TiebaApi
@@ -81,7 +79,7 @@ class ExploreViewModel : BaseViewModel<ExploreUiIntent, HomePartialChange, Explo
                             it.avatar,
                             "${it.forumId}",
                             it.forumName,
-                            false,
+                            it.hotNum,
                             "${it.levelId}"
                         )
                     } ?: emptyList()
@@ -280,7 +278,7 @@ data class ExploreUiState(
         val avatar: String,
         val forumId: String,
         val forumName: String,
-        val isSign: Boolean,
+        val hotNum: Long,
         val levelId: String,
     )
 }

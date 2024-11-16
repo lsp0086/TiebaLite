@@ -5,7 +5,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -17,6 +16,7 @@ import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -54,12 +54,15 @@ import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -79,6 +82,7 @@ import com.huanchengfly.tieba.post.ui.page.main.home.EmptyScreen
 import com.huanchengfly.tieba.post.ui.page.main.home.SearchBox
 import com.huanchengfly.tieba.post.ui.widgets.compose.ActionItem
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
+import com.huanchengfly.tieba.post.ui.widgets.compose.CenterRow
 import com.huanchengfly.tieba.post.ui.widgets.compose.Chip
 import com.huanchengfly.tieba.post.ui.widgets.compose.ConfirmDialog
 import com.huanchengfly.tieba.post.ui.widgets.compose.ErrorScreen
@@ -95,8 +99,7 @@ import com.huanchengfly.tieba.post.utils.ImageUtil
 import com.huanchengfly.tieba.post.utils.TiebaUtil
 import com.huanchengfly.tieba.post.utils.appPreferences
 import kotlinx.collections.immutable.persistentListOf
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Path
+import java.text.DecimalFormat
 
 @Immutable
 data class ExplorePageItem(
@@ -107,10 +110,10 @@ data class ExplorePageItem(
 val DiamondShape = GenericShape { size: Size, _ ->
     val path = Path().apply {
         // 上半部分梯形
-        moveTo(0f, size.height * 0.45f)
-        lineTo(size.width * 0.3f, size.height * 0.2f) // 顶点
-        lineTo(size.width * 0.7f, size.height * 0.2f) // 右上角
-        lineTo(size.width, size.height * 0.45f) // 右下角
+        moveTo(0f, size.height * 0.48f)
+        lineTo(size.width * 0.3f, size.height * 0.18f) // 顶点
+        lineTo(size.width * 0.7f, size.height * 0.18f) // 右上角
+        lineTo(size.width, size.height * 0.48f) // 右下角
 
         // 下半部分三角形
         lineTo(size.width * 0.5f, size.height) // 底部中心
@@ -126,21 +129,42 @@ private fun ForumItemContent(
         modifier = Modifier
             .fillMaxWidth(0.5f)
             .padding(horizontal = 16.dp, vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Row {
             Avatar(data = item.avatar, size = 32.dp, contentDescription = null, shape = RoundedCornerShape(10.dp))
             Spacer(modifier = Modifier.width(8.dp))
         }
-        Text(
-            color = ExtendedTheme.colors.text,
-            text = item.forumName,
-            modifier = Modifier
-                .align(CenterVertically).weight(1f),
-            fontSize = 10.sp,
-            fontWeight = FontWeight.Bold,
-            overflow = TextOverflow.Ellipsis,
-            maxLines = 1,
-        )
+        Column (modifier = Modifier.weight(1f).fillMaxHeight(),verticalArrangement = Arrangement.Center) {
+            Text(
+                color = Color.Black,
+                text = item.forumName,
+                modifier = Modifier.fillMaxHeight(0.5f),
+                fontSize = 12.5.sp,
+                textAlign = TextAlign.Center,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1,
+            )
+            Text(
+                color = Color.LightGray,
+                text = buildString {
+                    append("热度 ")
+                    append(
+                        if (item.hotNum > 10000){
+                            "${DecimalFormat("#.##").format(item.hotNum.toDouble() / 10000)}W"
+                        }else{
+                            "${item.hotNum}"
+                        }
+                    )
+                },
+                modifier = Modifier.fillMaxHeight(0.35f),
+                fontSize = 9.sp,
+                textAlign = TextAlign.Center,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1,
+            )
+        }
+
         Spacer(modifier = Modifier.width(8.dp))
         //11,220,180
         //120,175,255
@@ -156,7 +180,7 @@ private fun ForumItemContent(
         }else{
             Color(240,155,30,255)
         }
-        Box((if(item.isSign) Modifier.border(1.dp, Color.Black, DiamondShape) else Modifier)
+        Box(Modifier
             .background(
                 color = boxColor,
                 shape = DiamondShape,
@@ -168,7 +192,7 @@ private fun ForumItemContent(
             Text(
                 text = item.levelId,
                 color = Color.White,
-                fontSize = 10.sp,
+                fontSize = 8.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.align(Center)
             )
