@@ -86,6 +86,7 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.CenterRow
 import com.huanchengfly.tieba.post.ui.widgets.compose.Chip
 import com.huanchengfly.tieba.post.ui.widgets.compose.ConfirmDialog
 import com.huanchengfly.tieba.post.ui.widgets.compose.ErrorScreen
+import com.huanchengfly.tieba.post.ui.widgets.compose.HorizontalDivider
 import com.huanchengfly.tieba.post.ui.widgets.compose.LongClickMenu
 import com.huanchengfly.tieba.post.ui.widgets.compose.MenuState
 import com.huanchengfly.tieba.post.ui.widgets.compose.MyLazyVerticalGrid
@@ -100,7 +101,9 @@ import com.huanchengfly.tieba.post.utils.TiebaUtil
 import com.huanchengfly.tieba.post.utils.appPreferences
 import kotlinx.collections.immutable.persistentListOf
 import java.text.DecimalFormat
-
+fun RGBA(red:Int,green:Int,blue:Int,alpha:Float):Color{
+    return Color(red,green,blue,(255 * alpha).toInt())
+}
 @Immutable
 data class ExplorePageItem(
     val id: String,
@@ -140,13 +143,14 @@ private fun ForumItemContent(
                 color = Color.Black,
                 text = item.forumName,
                 modifier = Modifier.fillMaxHeight(0.5f),
-                fontSize = 12.5.sp,
-                textAlign = TextAlign.Center,
+                fontSize = 12.sp,
+                textAlign = TextAlign.Start,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
             )
+            HorizontalDivider(Modifier.height(5.dp))
             Text(
-                color = Color.LightGray,
+                color = RGBA(141,141,141,1f),
                 text = buildString {
                     append("热度 ")
                     append(
@@ -158,8 +162,8 @@ private fun ForumItemContent(
                     )
                 },
                 modifier = Modifier.fillMaxHeight(0.35f),
-                fontSize = 9.sp,
-                textAlign = TextAlign.Center,
+                fontSize = 10.sp,
+                textAlign = TextAlign.Start,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
             )
