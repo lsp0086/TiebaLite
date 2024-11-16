@@ -115,6 +115,7 @@ import com.huanchengfly.tieba.post.api.models.web.HotMessageListBean
 import com.huanchengfly.tieba.post.api.retrofit.ApiResult
 import com.huanchengfly.tieba.post.api.retrofit.RetrofitTiebaApi
 import com.huanchengfly.tieba.post.api.retrofit.body.MyMultipartBody
+import com.huanchengfly.tieba.post.api.retrofit.doIfSuccess
 import com.huanchengfly.tieba.post.api.urlEncode
 import com.huanchengfly.tieba.post.models.DislikeBean
 import com.huanchengfly.tieba.post.models.MyInfoBean
@@ -125,6 +126,7 @@ import com.huanchengfly.tieba.post.utils.CuidUtils
 import com.huanchengfly.tieba.post.utils.ImageUtil
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import okhttp3.RequestBody.Companion.asRequestBody
 import retrofit2.Call
 import java.io.File
@@ -253,6 +255,13 @@ object MixedTiebaApiImpl : ITiebaApi {
             "",
             ""
         )
+    }
+
+    override suspend fun forumHomeFlow(sortType: Int, page: Int): Flow<ForumHome> = flow {
+        val result = forumHomeAsync(sortType,page).await()
+        result.doIfSuccess {
+            emit(it)
+        }
     }
 
     override fun userLikeForum(

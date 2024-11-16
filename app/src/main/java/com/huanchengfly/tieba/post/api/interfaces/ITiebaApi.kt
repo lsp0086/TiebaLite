@@ -219,7 +219,16 @@ interface ITiebaApi {
         sortType: Int,
         page: Int = 0
     ): Deferred<ApiResult<ForumHome>>
-
+    /**
+     * 获取首页关注吧列表（网页版接口）
+     *
+     * @param sortType 排序方式（0 = 等级排序，1 = 关注顺序）
+     * @param page 分页页码（从 0 开始）
+     */
+    suspend fun forumHomeFlow(
+        sortType: Int,
+        page: Int = 0
+    ):Flow<ForumHome>
     /**
      * 查看用户关注的吧列表
      *
