@@ -128,7 +128,7 @@ private fun ForumItemContent(
     Row(
         modifier = Modifier
             .fillMaxWidth(0.5f)
-            .padding(horizontal = 16.dp, vertical = 12.dp),
+            .padding(start = 10.dp, end = 14.dp, top = 10.dp, bottom = 10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Row {
@@ -185,14 +185,14 @@ private fun ForumItemContent(
                 color = boxColor,
                 shape = DiamondShape,
             )
-            .size(20.dp)
+            .size(18.dp)
             .padding(vertical = 4.dp)
             .align(CenterVertically))
         {
             Text(
                 text = item.levelId,
                 color = Color.White,
-                fontSize = 8.sp,
+                fontSize = 7.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.align(Center)
             )
