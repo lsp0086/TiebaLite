@@ -1,5 +1,7 @@
 package com.huanchengfly.tieba.post.ui.page.main.explore
 
+import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import com.huanchengfly.tieba.post.api.TiebaApi
@@ -69,18 +71,18 @@ class ExploreViewModel : BaseViewModel<ExploreUiIntent, HomePartialChange, Explo
         }
 
         @Suppress("USELESS_CAST")
-        private fun produceRefreshPartialChangeFlow(): Flow<HomePartialChange.Refresh> =
-            HistoryUtil.getFlow(HistoryUtil.TYPE_FORUM, 0)
+        private fun produceRefreshPartialChangeFlow(): Flow<HomePartialChange.Refresh> {
+            return HistoryUtil.getFlow(HistoryUtil.TYPE_FORUM, 0)
                 .zip(
-                    TiebaApi.getInstance().forumRecommendNewFlow()
+                    TiebaApi.getInstance().forumHomeFlow(1)
                 ) { historyForums, forumRecommend ->
-                    val forums = forumRecommend.data_?.like_forum?.map {
+                    val forums = forumRecommend.data?.likeForum?.list?.map {
                         ExploreUiState.Forum(
                             it.avatar,
-                            it.forum_id.toString(),
-                            it.forum_name,
-                            it.is_sign == 1,
-                            it.level_id.toString()
+                            "${it.forumId}",
+                            it.forumName,
+                            false,
+                            "${it.levelId}"
                         )
                     } ?: emptyList()
                     val topForums = mutableListOf<ExploreUiState.Forum>()
@@ -93,8 +95,10 @@ class ExploreViewModel : BaseViewModel<ExploreUiIntent, HomePartialChange, Explo
                     ) as HomePartialChange.Refresh
                 }
                 .onStart { emit(HomePartialChange.Refresh.Start) }
-                .catch { emit(HomePartialChange.Refresh.Failure(it)) }
-
+                .catch {
+                    emit(HomePartialChange.Refresh.Failure(it))
+                }
+        }
         @Suppress("USELESS_CAST")
         private fun produceRefreshHistoryPartialChangeFlow(): Flow<HomePartialChange.RefreshHistory> =
             HistoryUtil.getFlow(HistoryUtil.TYPE_FORUM, 0)

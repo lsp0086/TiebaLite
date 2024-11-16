@@ -111,11 +111,14 @@ import com.huanchengfly.tieba.post.api.models.protos.userPost.UserPostRequestDat
 import com.huanchengfly.tieba.post.api.models.protos.userPost.UserPostResponse
 import com.huanchengfly.tieba.post.api.models.web.ForumBean
 import com.huanchengfly.tieba.post.api.models.web.ForumHome
+import com.huanchengfly.tieba.post.api.models.web.ForumHomeData
 import com.huanchengfly.tieba.post.api.models.web.HotMessageListBean
 import com.huanchengfly.tieba.post.api.retrofit.ApiResult
 import com.huanchengfly.tieba.post.api.retrofit.RetrofitTiebaApi
 import com.huanchengfly.tieba.post.api.retrofit.body.MyMultipartBody
 import com.huanchengfly.tieba.post.api.retrofit.doIfSuccess
+import com.huanchengfly.tieba.post.api.retrofit.fetchIfSuccess
+import com.huanchengfly.tieba.post.api.retrofit.isSuccessful
 import com.huanchengfly.tieba.post.api.urlEncode
 import com.huanchengfly.tieba.post.models.DislikeBean
 import com.huanchengfly.tieba.post.models.MyInfoBean
@@ -125,8 +128,12 @@ import com.huanchengfly.tieba.post.utils.AccountUtil
 import com.huanchengfly.tieba.post.utils.CuidUtils
 import com.huanchengfly.tieba.post.utils.ImageUtil
 import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import okhttp3.RequestBody.Companion.asRequestBody
 import retrofit2.Call
 import java.io.File
@@ -257,12 +264,52 @@ object MixedTiebaApiImpl : ITiebaApi {
         )
     }
 
-    override suspend fun forumHomeFlow(sortType: Int, page: Int): Flow<ForumHome> = flow {
-        val result = forumHomeAsync(sortType,page).await()
-        result.doIfSuccess {
+    override fun forumHomeFlow(sortType: Int, page: Int): Flow<ForumHome> = flow {
+        val result = withContext(Dispatchers.IO) {
+            forumHomeAsync(sortType, page).await()
+        }
+        result.fetchIfSuccess {
             emit(it)
         }
-    }
+    }.flowOn(Dispatchers.IO)
+    private var currPage = 0
+    private var loopTag = -1
+    override fun forumHomeFlow(sortType: Int): Flow<ForumHome> = flow {
+        val allData = mutableListOf<ForumHomeData.LikeForum.ListItem>()
+        currPage = 0
+        loopTag = 1
+        while (loopTag > 0){
+            val pageResult = withContext(Dispatchers.IO) {
+                forumHomeAsync(sortType, currPage).await()
+            }
+            if (pageResult.isSuccessful){
+                pageResult.fetchIfSuccess {
+                    if (it.data != null){
+                        if (it.data!!.likeForum.list.isNotEmpty()){
+                            allData.addAll(it.data!!.likeForum.list)
+                        }else{
+                            loopTag = -1
+                        }
+                    }else{
+                        loopTag = -1
+                    }
+                }
+            }else{
+                loopTag = -1
+            }
+            currPage += 1
+        }
+        val distinctData = allData.distinctBy {
+            it.avatar
+        }
+        val likeForum = ForumHomeData.LikeForum(
+            distinctData, ForumHomeData.LikeForum.Page(0,0)
+        )
+        val forumData = ForumHomeData(likeForum)
+        val resultHome = ForumHome()
+        resultHome.data = forumData
+        emit(resultHome)
+    }.flowOn(Dispatchers.IO)
 
     override fun userLikeForum(
         uid: String, page: Int

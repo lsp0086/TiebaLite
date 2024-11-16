@@ -225,9 +225,13 @@ interface ITiebaApi {
      * @param sortType 排序方式（0 = 等级排序，1 = 关注顺序）
      * @param page 分页页码（从 0 开始）
      */
-    suspend fun forumHomeFlow(
+    fun forumHomeFlow(
         sortType: Int,
         page: Int = 0
+    ):Flow<ForumHome>
+    //读取全部由于上一个不能读取全部所以循环到没有数据截止
+    fun forumHomeFlow(
+        sortType: Int,
     ):Flow<ForumHome>
     /**
      * 查看用户关注的吧列表

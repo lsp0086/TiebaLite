@@ -8,5 +8,5 @@ open class WebBase<Data> {
 
     @SerializedName("errmsg", alternate = ["error"])
     val errorMsg: String = ""
-    val data: Data? = null
+    var data: Data? = null
 }
