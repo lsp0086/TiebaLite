@@ -470,6 +470,11 @@ fun ExplorePage(
         initial = 0
     )
 
+    val showAllFollowed by viewModel.uiState.collectPartialAsState(
+        prop1 = ExploreUiState::showAll,
+        initial = false
+    )
+
     val error by viewModel.uiState.collectPartialAsState(
         prop1 = ExploreUiState::error,
         initial = null
@@ -704,8 +709,8 @@ fun ExplorePage(
                                     contentDescription = null,
                                     modifier = Modifier.size(12.dp)
                                 )
-                                Row(Modifier.width(5.dp)) {  }
-                                Text(text = if (showFollowedType == 0) "自由排序" else "等级排序",
+                                Row(Modifier.width(3.dp)) {  }
+                                Text(text = if (showFollowedType == 0) "默认排序" else "等级排序",
                                     fontSize = 12.sp,
                                     color = RGBA(168,168,168,1f),
                                     modifier = Modifier.clickable(
@@ -728,6 +733,11 @@ fun ExplorePage(
                                     aInt >= bInt
                                 }
                             }
+                            if (!showAllFollowed){
+                                if (typeForums.size > 20) {
+                                    typeForums = typeForums.subList(0,20)
+                                }
+                            }
                             FlowRow (Modifier.fillMaxWidth()) {
                                 typeForums.forEach{ item ->
                                     ForumItem(
@@ -746,6 +756,28 @@ fun ExplorePage(
                                             viewModel.send(ExploreUiIntent.TopForums.Delete(it.forumId))
                                         }
                                     )
+                                }
+                                if (forums.size > 20){
+                                    Row (
+                                        modifier =  Modifier.fillMaxWidth().height(44.dp).clickable(
+                                        interactionSource = remember { MutableInteractionSource() },
+                                        indication = null) {
+                                            viewModel.send(
+                                                ExploreUiIntent.ShowAllFollowed(showAllFollowed)
+                                            )
+                                        },
+                                        verticalAlignment = CenterVertically,
+                                        horizontalArrangement = Arrangement.Center
+                                        ) {
+                                        Text(
+                                            text = buildString {
+                                                append(if (showAllFollowed) "收起列表" else "展示列表")
+                                                append(" " + if (showAllFollowed) "︿" else "﹀")
+                                            },
+                                            fontSize = 12.sp,
+                                            color = RGBA(168,168,168,1f)
+                                        )
+                                    }
                                 }
                             }
                         }

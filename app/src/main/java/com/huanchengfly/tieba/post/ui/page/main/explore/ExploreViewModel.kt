@@ -66,6 +66,8 @@ class ExploreViewModel : BaseViewModel<ExploreUiIntent, ExplorePartialChange, Ex
                 intentFlow.filterIsInstance<ExploreUiIntent.ToggleHistory>()
                     .flatMapConcat { it.toPartialChangeFlow() },
                 intentFlow.filterIsInstance<ExploreUiIntent.ChangeFollowedType>()
+                    .flatMapConcat { it.toPartialChangeFlow() },
+                intentFlow.filterIsInstance<ExploreUiIntent.ShowAllFollowed>()
                     .flatMapConcat { it.toPartialChangeFlow() }
             )
         }
@@ -140,6 +142,9 @@ class ExploreViewModel : BaseViewModel<ExploreUiIntent, ExplorePartialChange, Ex
 
         private fun ExploreUiIntent.ChangeFollowedType.toPartialChangeFlow() =
             flowOf(ExplorePartialChange.ChangeFollowedType(if (currType == 0) 1 else 0))
+
+        private fun ExploreUiIntent.ShowAllFollowed.toPartialChangeFlow() =
+            flowOf(ExplorePartialChange.ShowAllFollowed(!showAll))
     }
 }
 
@@ -159,6 +164,8 @@ sealed interface ExploreUiIntent : UiIntent {
     data class ToggleHistory(val currentExpand: Boolean) : ExploreUiIntent
 
     data class ChangeFollowedType(val currType: Int) : ExploreUiIntent
+
+    data class ShowAllFollowed(val showAll: Boolean) : ExploreUiIntent
 }
 
 sealed interface ExplorePartialChange : PartialChange<ExploreUiState> {
@@ -274,6 +281,11 @@ sealed interface ExplorePartialChange : PartialChange<ExploreUiState> {
         override fun reduce(oldState: ExploreUiState): ExploreUiState =
             oldState.copy(followedType = currType)
     }
+
+    data class ShowAllFollowed(val showAll: Boolean) :ExplorePartialChange{
+        override fun reduce(oldState: ExploreUiState): ExploreUiState =
+            oldState.copy(showAll = showAll)
+    }
 }
 
 @Immutable
@@ -284,6 +296,7 @@ data class ExploreUiState(
     val historyForums: ImmutableList<History> = persistentListOf(),
     val expandHistoryForum: Boolean = true,
     val followedType: Int = 0,
+    val showAll: Boolean = false,
     val error: Throwable? = null,
 ) : UiState {
     @Immutable
