@@ -27,7 +27,9 @@ data class ForumHomeData(
         )
 
         data class Page(
+            @SerializedName("cur_page")
             val currentPage: Int,
+            @SerializedName("total_page")
             val totalPage: Int
         )
     }

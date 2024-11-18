@@ -35,23 +35,23 @@ import kotlinx.coroutines.flow.zip
 import org.litepal.LitePal
 
 @Stable
-class ExploreViewModel : BaseViewModel<ExploreUiIntent, HomePartialChange, ExploreUiState, HomeUiEvent>() {
+class ExploreViewModel : BaseViewModel<ExploreUiIntent, ExplorePartialChange, ExploreUiState, HomeUiEvent>() {
     override fun createInitialState(): ExploreUiState = ExploreUiState()
 
-    override fun createPartialChangeProducer(): PartialChangeProducer<ExploreUiIntent, HomePartialChange, ExploreUiState> =
+    override fun createPartialChangeProducer(): PartialChangeProducer<ExploreUiIntent, ExplorePartialChange, ExploreUiState> =
         HomePartialChangeProducer
 
-    override fun dispatchEvent(partialChange: HomePartialChange): UiEvent? =
+    override fun dispatchEvent(partialChange: ExplorePartialChange): UiEvent? =
         when (partialChange) {
-            is HomePartialChange.TopForums.Delete.Failure -> CommonUiEvent.Toast(partialChange.errorMessage)
-            is HomePartialChange.TopForums.Add.Failure -> CommonUiEvent.Toast(partialChange.errorMessage)
+            is ExplorePartialChange.TopForums.Delete.Failure -> CommonUiEvent.Toast(partialChange.errorMessage)
+            is ExplorePartialChange.TopForums.Add.Failure -> CommonUiEvent.Toast(partialChange.errorMessage)
             else -> null
         }
 
     object HomePartialChangeProducer :
-        PartialChangeProducer<ExploreUiIntent, HomePartialChange, ExploreUiState> {
+        PartialChangeProducer<ExploreUiIntent, ExplorePartialChange, ExploreUiState> {
         @OptIn(ExperimentalCoroutinesApi::class)
-        override fun toPartialChangeFlow(intentFlow: Flow<ExploreUiIntent>): Flow<HomePartialChange> {
+        override fun toPartialChangeFlow(intentFlow: Flow<ExploreUiIntent>): Flow<ExplorePartialChange> {
             return merge(
                 intentFlow.filterIsInstance<ExploreUiIntent.Refresh>()
                     .flatMapConcat { produceRefreshPartialChangeFlow() },
@@ -64,12 +64,14 @@ class ExploreViewModel : BaseViewModel<ExploreUiIntent, HomePartialChange, Explo
                 intentFlow.filterIsInstance<ExploreUiIntent.Unfollow>()
                     .flatMapConcat { it.toPartialChangeFlow() },
                 intentFlow.filterIsInstance<ExploreUiIntent.ToggleHistory>()
+                    .flatMapConcat { it.toPartialChangeFlow() },
+                intentFlow.filterIsInstance<ExploreUiIntent.ChangeFollowedType>()
                     .flatMapConcat { it.toPartialChangeFlow() }
             )
         }
 
         @Suppress("USELESS_CAST")
-        private fun produceRefreshPartialChangeFlow(): Flow<HomePartialChange.Refresh> {
+        private fun produceRefreshPartialChangeFlow(): Flow<ExplorePartialChange.Refresh> {
             return HistoryUtil.getFlow(HistoryUtil.TYPE_FORUM, 0)
                 .zip(
                     TiebaApi.getInstance().forumHomeFlow(1)
@@ -86,55 +88,58 @@ class ExploreViewModel : BaseViewModel<ExploreUiIntent, HomePartialChange, Explo
                     val topForums = mutableListOf<ExploreUiState.Forum>()
                     val topForumsDB = LitePal.findAll(TopForum::class.java).map { it.forumId }
                     topForums.addAll(forums.filter { topForumsDB.contains(it.forumId) })
-                    HomePartialChange.Refresh.Success(
+                    ExplorePartialChange.Refresh.Success(
                         forums,
                         topForums,
                         historyForums
-                    ) as HomePartialChange.Refresh
+                    ) as ExplorePartialChange.Refresh
                 }
-                .onStart { emit(HomePartialChange.Refresh.Start) }
+                .onStart { emit(ExplorePartialChange.Refresh.Start) }
                 .catch {
-                    emit(HomePartialChange.Refresh.Failure(it))
+                    emit(ExplorePartialChange.Refresh.Failure(it))
                 }
         }
         @Suppress("USELESS_CAST")
-        private fun produceRefreshHistoryPartialChangeFlow(): Flow<HomePartialChange.RefreshHistory> =
+        private fun produceRefreshHistoryPartialChangeFlow(): Flow<ExplorePartialChange.RefreshHistory> =
             HistoryUtil.getFlow(HistoryUtil.TYPE_FORUM, 0)
-                .map { HomePartialChange.RefreshHistory.Success(it) as HomePartialChange.RefreshHistory }
-                .catch { emit(HomePartialChange.RefreshHistory.Failure(it)) }
+                .map { ExplorePartialChange.RefreshHistory.Success(it) as ExplorePartialChange.RefreshHistory }
+                .catch { emit(ExplorePartialChange.RefreshHistory.Failure(it)) }
 
         private fun ExploreUiIntent.TopForums.Delete.toPartialChangeFlow() =
             flow {
                 val deletedRows = LitePal.deleteAll(TopForum::class.java, "forumId = ?", forumId)
                 if (deletedRows > 0) {
-                    emit(HomePartialChange.TopForums.Delete.Success(forumId))
+                    emit(ExplorePartialChange.TopForums.Delete.Success(forumId))
                 } else {
-                    emit(HomePartialChange.TopForums.Delete.Failure("forum $forumId is not top!"))
+                    emit(ExplorePartialChange.TopForums.Delete.Failure("forum $forumId is not top!"))
                 }
             }.flowOn(Dispatchers.IO)
-                .catch { emit(HomePartialChange.TopForums.Delete.Failure(it.getErrorMessage())) }
+                .catch { emit(ExplorePartialChange.TopForums.Delete.Failure(it.getErrorMessage())) }
 
         private fun ExploreUiIntent.TopForums.Add.toPartialChangeFlow() =
             flow {
                 val success = TopForum(forum.forumId).saveOrUpdate("forumId = ?", forum.forumId)
                 if (success) {
-                    emit(HomePartialChange.TopForums.Add.Success(forum))
+                    emit(ExplorePartialChange.TopForums.Add.Success(forum))
                 } else {
-                    emit(HomePartialChange.TopForums.Add.Failure("未知错误"))
+                    emit(ExplorePartialChange.TopForums.Add.Failure("未知错误"))
                 }
             }.flowOn(Dispatchers.IO)
-                .catch { emit(HomePartialChange.TopForums.Add.Failure(it.getErrorMessage())) }
+                .catch { emit(ExplorePartialChange.TopForums.Add.Failure(it.getErrorMessage())) }
 
         private fun ExploreUiIntent.Unfollow.toPartialChangeFlow() =
             TiebaApi.getInstance()
                 .unlikeForumFlow(forumId, forumName, AccountUtil.getLoginInfo()!!.tbs)
-                .map<CommonResponse, HomePartialChange.Unfollow> {
-                    HomePartialChange.Unfollow.Success(forumId)
+                .map<CommonResponse, ExplorePartialChange.Unfollow> {
+                    ExplorePartialChange.Unfollow.Success(forumId)
                 }
-                .catch { emit(HomePartialChange.Unfollow.Failure(it.getErrorMessage())) }
+                .catch { emit(ExplorePartialChange.Unfollow.Failure(it.getErrorMessage())) }
 
         private fun ExploreUiIntent.ToggleHistory.toPartialChangeFlow() =
-            flowOf(HomePartialChange.ToggleHistory(!currentExpand))
+            flowOf(ExplorePartialChange.ToggleHistory(!currentExpand))
+
+        private fun ExploreUiIntent.ChangeFollowedType.toPartialChangeFlow() =
+            flowOf(ExplorePartialChange.ChangeFollowedType(if (currType == 0) 1 else 0))
     }
 }
 
@@ -152,10 +157,12 @@ sealed interface ExploreUiIntent : UiIntent {
     }
 
     data class ToggleHistory(val currentExpand: Boolean) : ExploreUiIntent
+
+    data class ChangeFollowedType(val currType: Int) : ExploreUiIntent
 }
 
-sealed interface HomePartialChange : PartialChange<ExploreUiState> {
-    sealed class Unfollow : HomePartialChange {
+sealed interface ExplorePartialChange : PartialChange<ExploreUiState> {
+    sealed class Unfollow : ExplorePartialChange {
         override fun reduce(oldState: ExploreUiState): ExploreUiState =
             when (this) {
                 is Success -> {
@@ -175,7 +182,7 @@ sealed interface HomePartialChange : PartialChange<ExploreUiState> {
         data class Failure(val errorMessage: String) : Unfollow()
     }
 
-    sealed class Refresh : HomePartialChange {
+    sealed class Refresh : ExplorePartialChange {
         override fun reduce(oldState: ExploreUiState): ExploreUiState =
             when (this) {
                 is Success -> oldState.copy(
@@ -203,7 +210,7 @@ sealed interface HomePartialChange : PartialChange<ExploreUiState> {
         ) : Refresh()
     }
 
-    sealed class RefreshHistory : HomePartialChange {
+    sealed class RefreshHistory : ExplorePartialChange {
         override fun reduce(oldState: ExploreUiState): ExploreUiState =
             when (this) {
                 is Success -> oldState.copy(
@@ -222,8 +229,8 @@ sealed interface HomePartialChange : PartialChange<ExploreUiState> {
         ) : RefreshHistory()
     }
 
-    sealed interface TopForums : HomePartialChange {
-        sealed interface Delete : HomePartialChange {
+    sealed interface TopForums : ExplorePartialChange {
+        sealed interface Delete : ExplorePartialChange {
             override fun reduce(oldState: ExploreUiState): ExploreUiState =
                 when (this) {
                     is Success -> oldState.copy(topForums = oldState.topForums.filterNot { it.forumId == forumId }
@@ -237,7 +244,7 @@ sealed interface HomePartialChange : PartialChange<ExploreUiState> {
             data class Failure(val errorMessage: String) : Delete
         }
 
-        sealed interface Add : HomePartialChange {
+        sealed interface Add : ExplorePartialChange {
             override fun reduce(oldState: ExploreUiState): ExploreUiState =
                 when (this) {
                     is Success -> {
@@ -258,9 +265,14 @@ sealed interface HomePartialChange : PartialChange<ExploreUiState> {
         }
     }
 
-    data class ToggleHistory(val expand: Boolean) : HomePartialChange {
+    data class ToggleHistory(val expand: Boolean) : ExplorePartialChange {
         override fun reduce(oldState: ExploreUiState): ExploreUiState =
             oldState.copy(expandHistoryForum = expand)
+    }
+
+    data class ChangeFollowedType(val currType: Int) :ExplorePartialChange{
+        override fun reduce(oldState: ExploreUiState): ExploreUiState =
+            oldState.copy(followedType = currType)
     }
 }
 
@@ -271,6 +283,7 @@ data class ExploreUiState(
     val topForums: ImmutableList<Forum> = persistentListOf(),
     val historyForums: ImmutableList<History> = persistentListOf(),
     val expandHistoryForum: Boolean = true,
+    val followedType: Int = 0,
     val error: Throwable? = null,
 ) : UiState {
     @Immutable

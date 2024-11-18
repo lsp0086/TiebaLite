@@ -118,7 +118,7 @@ open class AppPreferencesUtils private constructor(ctx: Context) {
 
     var hideExplore by DataStoreDelegates.boolean(defaultValue = false)
 
-    var hideForumIntroAndStat by DataStoreDelegates.boolean(defaultValue = false)
+    var hideForumIntroAndState by DataStoreDelegates.boolean(defaultValue = false)
 
     var hideMedia by DataStoreDelegates.boolean(defaultValue = false)
 
@@ -126,7 +126,7 @@ open class AppPreferencesUtils private constructor(ctx: Context) {
 
     var homePageScroll by DataStoreDelegates.boolean(defaultValue = false)
 
-    var homePageShowHistoryForum by DataStoreDelegates.boolean(defaultValue = true)
+    var explorePageShowHistoryForum by DataStoreDelegates.boolean(defaultValue = true)
 
     var imageDarkenWhenNightMode by DataStoreDelegates.boolean(defaultValue = true)
 

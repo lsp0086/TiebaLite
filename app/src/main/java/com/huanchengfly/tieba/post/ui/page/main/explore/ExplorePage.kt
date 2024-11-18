@@ -59,6 +59,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
@@ -82,7 +83,6 @@ import com.huanchengfly.tieba.post.ui.page.main.home.EmptyScreen
 import com.huanchengfly.tieba.post.ui.page.main.home.SearchBox
 import com.huanchengfly.tieba.post.ui.widgets.compose.ActionItem
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
-import com.huanchengfly.tieba.post.ui.widgets.compose.CenterRow
 import com.huanchengfly.tieba.post.ui.widgets.compose.Chip
 import com.huanchengfly.tieba.post.ui.widgets.compose.ConfirmDialog
 import com.huanchengfly.tieba.post.ui.widgets.compose.ErrorScreen
@@ -101,8 +101,22 @@ import com.huanchengfly.tieba.post.utils.TiebaUtil
 import com.huanchengfly.tieba.post.utils.appPreferences
 import kotlinx.collections.immutable.persistentListOf
 import java.text.DecimalFormat
+
 fun RGBA(red:Int,green:Int,blue:Int,alpha:Float):Color{
     return Color(red,green,blue,(255 * alpha).toInt())
+}
+fun <T> List<T>.customSort(comparator: (T, T) -> Boolean): List<T> {
+    val sortedList = this.toMutableList()
+    for (i in 0 until sortedList.size - 1) {
+        for (j in i + 1 until sortedList.size) {
+            if (comparator(sortedList[i], sortedList[j])) {
+                val temp = sortedList[i]
+                sortedList[i] = sortedList[j]
+                sortedList[j] = temp
+            }
+        }
+    }
+    return sortedList
 }
 @Immutable
 data class ExplorePageItem(
@@ -132,7 +146,7 @@ private fun ForumItemContent(
         modifier = Modifier
             .fillMaxWidth(0.5f)
             .padding(start = 10.dp, end = 14.dp, top = 10.dp, bottom = 10.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = CenterVertically
     ) {
         Row {
             Avatar(data = item.avatar, size = 32.dp, contentDescription = null, shape = RoundedCornerShape(10.dp))
@@ -451,6 +465,11 @@ fun ExplorePage(
         prop1 = ExploreUiState::expandHistoryForum,
         initial = true
     )
+    val showFollowedType by viewModel.uiState.collectPartialAsState(
+        prop1 = ExploreUiState::followedType,
+        initial = 0
+    )
+
     val error by viewModel.uiState.collectPartialAsState(
         prop1 = ExploreUiState::error,
         initial = null
@@ -458,7 +477,7 @@ fun ExplorePage(
     val isLoggedIn = remember(account) { account != null }
     val isEmpty by remember { derivedStateOf { forums.isEmpty() } }
     val hasTopForum by remember { derivedStateOf { topForums.isNotEmpty() } }
-    val showHistoryForum by remember { derivedStateOf { context.appPreferences.homePageShowHistoryForum && historyForums.isNotEmpty() } }
+    val showHistoryForum by remember { derivedStateOf { context.appPreferences.explorePageShowHistoryForum && historyForums.isNotEmpty() } }
     val listSingle by remember { mutableStateOf(context.appPreferences.listSingle) }
     val isError by remember { derivedStateOf { error != null } }
     val gridCells by remember { derivedStateOf { getGridCells(context, listSingle) } }
@@ -672,18 +691,45 @@ fun ExplorePage(
                                 )
                             }
                         }
-                        if (showHistoryForum || hasTopForum) {
-                            item(key = "ForumHeader", span = { GridItemSpan(maxLineSpan) }) {
-                                Column(
-                                    modifier = Modifier.padding(vertical = 8.dp)
-                                ) {
-                                    Header(text = stringResource(id = R.string.forum_list_title))
-                                }
+                        item(key = "ForumHeader", span = { GridItemSpan(maxLineSpan) }) {
+                            Row(
+                                modifier = Modifier.padding(vertical = 8.dp),
+                                verticalAlignment = CenterVertically
+                            ) {
+                                Header(text = stringResource(id = R.string.forum_list_title))
+                                Row(Modifier.weight(1f)){}
+                                val iconPainter = if (showFollowedType == 0) painterResource(R.drawable.tieba_default_sort) else painterResource(R.drawable.tieba_level_sort)
+                                Image(
+                                    painter =  iconPainter,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(12.dp)
+                                )
+                                Row(Modifier.width(5.dp)) {  }
+                                Text(text = if (showFollowedType == 0) "自由排序" else "等级排序",
+                                    fontSize = 12.sp,
+                                    color = RGBA(168,168,168,1f),
+                                    modifier = Modifier.clickable(
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = null)
+                                {
+                                        viewModel.send(
+                                            ExploreUiIntent.ChangeFollowedType(showFollowedType)
+                                        )
+                                })
+                                Row(Modifier.width(12.dp)) {  }
                             }
                         }
                         item (key = "Followed") {
+                            var typeForums = forums.toList()
+                            if (showFollowedType == 1){
+                                typeForums = forums.customSort{ a,b ->
+                                    val aInt = a.levelId.toIntOrNull() ?: 0
+                                    val bInt = b.levelId.toIntOrNull() ?: 0
+                                    aInt >= bInt
+                                }
+                            }
                             FlowRow (Modifier.fillMaxWidth()) {
-                                forums.forEach{ item ->
+                                typeForums.forEach{ item ->
                                     ForumItem(
                                         item,
                                         onClick = {

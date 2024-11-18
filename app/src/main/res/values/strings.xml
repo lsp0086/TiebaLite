@@ -10,7 +10,7 @@
     <string name="shortcut_my_collect">我的收藏</string>
     <string name="shortcut_my_message">我的消息</string>
     <string name="shortcut_search">搜索</string>
-    <string name="forum_list_title">关注</string>
+    <string name="forum_list_title">关注的吧</string>
     <string name="title_refresh">刷新</string>
     <string name="title_copy_link">复制链接</string>
     <string name="toast_copy_success">已复制到剪贴板</string>
@@ -225,7 +225,7 @@
     <string name="title_history_today">今天早些时候</string>
     <string name="title_history_before">昨天或更早</string>
     <string name="title_history_thread">贴子记录</string>
-    <string name="title_history_forum">经过贴吧</string>
+    <string name="title_history_forum">我的足迹</string>
     <string name="title_thread_header">回复 %1$s</string>
     <string name="title_oksign_slow_mode">慢速模式</string>
     <string name="summary_oksign_slow_mode">开启后，一键签到时签到每个吧的时间间隔将会更长</string>
