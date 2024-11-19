@@ -614,7 +614,7 @@ fun ExplorePage(
                                     }
                                     AnimatedVisibility(visible = expandHistoryForum) {
                                         LazyRow(
-                                            contentPadding = PaddingValues(horizontal = 12.dp),
+                                            contentPadding = PaddingValues(horizontal = 10.dp),
                                         ) {
                                             item(key = "Spacer1") {
                                                 Spacer(modifier = Modifier.width(12.dp))
