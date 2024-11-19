@@ -645,9 +645,8 @@ fun ExplorePage(
                                                         size = 40.dp,
                                                         shape = RoundedCornerShape(14.dp)
                                                     )
-                                                    val title = it.title.replace("吧","")
                                                     Text(
-                                                        text = title,
+                                                        text = it.data,
                                                         modifier = Modifier.padding(vertical = 4.dp),
                                                         fontSize = 11.sp,
                                                         color = Color.Black,
