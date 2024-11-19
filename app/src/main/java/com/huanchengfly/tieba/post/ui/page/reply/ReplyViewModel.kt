@@ -199,8 +199,8 @@ sealed interface ReplyPartialChange : PartialChange<ReplyUiState> {
                 isUploading = false,
                 uploadImageResultList = resultList.toImmutableList()
             )
-
             is Failure -> oldState.copy(isUploading = false)
+            else -> {oldState.copy(isUploading = false)}
         }
 
         object Start : UploadImages()
@@ -219,6 +219,7 @@ sealed interface ReplyPartialChange : PartialChange<ReplyUiState> {
                 is Start -> oldState.copy(isSending = true)
                 is Success -> oldState.copy(isSending = false, replySuccess = true)
                 is Failure -> oldState.copy(isSending = false, replySuccess = false)
+                else -> {oldState.copy(isSending = false)}
             }
         }
 

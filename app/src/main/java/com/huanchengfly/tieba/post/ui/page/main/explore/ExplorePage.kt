@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -83,6 +84,7 @@ import com.huanchengfly.tieba.post.ui.page.main.home.EmptyScreen
 import com.huanchengfly.tieba.post.ui.page.main.home.SearchBox
 import com.huanchengfly.tieba.post.ui.widgets.compose.ActionItem
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
+import com.huanchengfly.tieba.post.ui.widgets.compose.CenterColumn
 import com.huanchengfly.tieba.post.ui.widgets.compose.Chip
 import com.huanchengfly.tieba.post.ui.widgets.compose.ConfirmDialog
 import com.huanchengfly.tieba.post.ui.widgets.compose.ErrorScreen
@@ -601,9 +603,7 @@ fun ExplorePage(
                                             text = stringResource(id = R.string.title_history_forum),
                                             invert = false
                                         )
-
                                         Spacer(modifier = Modifier.weight(1f))
-
                                         Icon(
                                             imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowRight,
                                             contentDescription = stringResource(id = R.string.desc_show),
@@ -614,7 +614,7 @@ fun ExplorePage(
                                     }
                                     AnimatedVisibility(visible = expandHistoryForum) {
                                         LazyRow(
-                                            contentPadding = PaddingValues(bottom = 8.dp),
+                                            contentPadding = PaddingValues(horizontal = 12.dp),
                                         ) {
                                             item(key = "Spacer1") {
                                                 Spacer(modifier = Modifier.width(12.dp))
@@ -623,34 +623,36 @@ fun ExplorePage(
                                                 historyForums,
                                                 key = { it.data }
                                             ) {
-                                                Row(
+                                                CenterColumn (
                                                     modifier = Modifier
-                                                        .padding(horizontal = 4.dp)
-                                                        .height(IntrinsicSize.Min)
-                                                        .clip(RoundedCornerShape(100))
-                                                        .background(color = ExtendedTheme.colors.chip)
-                                                        .clickable {
+                                                        .width(60.dp)
+                                                        .wrapContentHeight()
+                                                        .clickable(
+                                                            interactionSource = remember { MutableInteractionSource() },
+                                                            indication = null
+                                                        ) {
                                                             navigator.navigate(
                                                                 ForumPageDestination(
                                                                     it.data
                                                                 )
                                                             )
                                                         }
-                                                        .padding(4.dp),
-                                                    verticalAlignment = CenterVertically,
-                                                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+
                                                 ) {
                                                     Avatar(
                                                         data = it.avatar,
                                                         contentDescription = null,
-                                                        size = 24.dp,
-                                                        shape = CircleShape
+                                                        size = 40.dp,
+                                                        shape = RoundedCornerShape(14.dp)
                                                     )
+                                                    val title = it.title.replace("吧","")
                                                     Text(
-                                                        text = it.title,
-                                                        fontSize = 12.sp,
-                                                        fontWeight = FontWeight.Bold,
-                                                        modifier = Modifier.padding(end = 4.dp)
+                                                        text = title,
+                                                        modifier = Modifier.padding(vertical = 4.dp),
+                                                        fontSize = 11.sp,
+                                                        color = Color.Black,
+                                                        overflow = TextOverflow.Ellipsis,
+                                                        maxLines = 1,
                                                     )
                                                 }
                                             }

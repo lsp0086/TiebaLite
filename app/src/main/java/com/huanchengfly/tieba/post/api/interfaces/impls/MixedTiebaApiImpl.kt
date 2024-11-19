@@ -272,11 +272,11 @@ object MixedTiebaApiImpl : ITiebaApi {
             emit(it)
         }
     }.flowOn(Dispatchers.IO)
-    private var currPage = 0
+    private var currPage = 1
     private var loopTag = -1
     override fun forumHomeFlow(sortType: Int): Flow<ForumHome> = flow {
         val allData = mutableListOf<ForumHomeData.LikeForum.ListItem>()
-        currPage = 0
+        currPage = 1
         loopTag = 1
         while (loopTag > 0){
             val pageResult = withContext(Dispatchers.IO) {
@@ -300,7 +300,7 @@ object MixedTiebaApiImpl : ITiebaApi {
             currPage += 1
         }
         val distinctData = allData.distinctBy {
-            it.avatar
+            it.forumId
         }
         val likeForum = ForumHomeData.LikeForum(
             distinctData, ForumHomeData.LikeForum.Page(0,0)
