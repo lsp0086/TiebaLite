@@ -109,10 +109,10 @@ fun <T> List<T>.customSort(comparator: (T, T) -> Boolean): List<T> {
     val sortedList = this.toMutableList()
     for (i in 0 until sortedList.size - 1) {
         for (j in i + 1 until sortedList.size) {
-            if (comparator(sortedList[i], sortedList[j])) {
-                val temp = sortedList[j]
-                sortedList[j] = sortedList[i]
-                sortedList[i] = temp
+            if (!comparator(sortedList[i], sortedList[j])) {
+                val temp = sortedList[i]
+                sortedList[i] = sortedList[j]
+                sortedList[j] = temp
             }
         }
     }
