@@ -772,7 +772,7 @@ fun ExplorePage(
                                         Text(
                                             text = buildString {
                                                 append(if (showAllFollowed) "收起列表" else "展示列表")
-                                                append(" " + if (showAllFollowed) "︿" else "﹀")
+                                                append(" " + if (showAllFollowed) "▲" else "▼")
                                             },
                                             fontSize = 12.sp,
                                             color = RGBA(168,168,168,1f)
