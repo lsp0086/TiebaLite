@@ -2,7 +2,6 @@ package com.huanchengfly.tieba.post.ui.widgets.compose
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -55,6 +54,7 @@ import androidx.compose.ui.util.fastForEach
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.api.models.SearchThreadBean
 import com.huanchengfly.tieba.post.arch.BaseComposeActivity
+import com.huanchengfly.tieba.post.onClickable
 import com.huanchengfly.tieba.post.ui.common.PbContentText
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.common.windowsizeclass.WindowWidthSizeClass
@@ -101,7 +101,7 @@ fun QuotePostCard(
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(6.dp))
                 .background(ExtendedTheme.colors.card)
-                .clickable {
+                .onClickable {
                     onMainPostClick(mainPost)
                 },
             medias = medias,
@@ -261,7 +261,7 @@ fun SearchThreadItem(
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(6.dp))
                             .background(ExtendedTheme.colors.floorCard)
-                            .clickable {
+                            .onClickable {
                                 onQuotePostClick(item.postInfo)
                             },
                         medias = item.media.toImmutableList(),
@@ -274,7 +274,7 @@ fun SearchThreadItem(
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(6.dp))
                             .background(ExtendedTheme.colors.floorCard)
-                            .clickable {
+                            .onClickable {
                                 onMainPostClick(item.mainPost)
                             },
                         medias = item.media.toImmutableList(),
@@ -454,7 +454,7 @@ fun SearchBox(
                     Box(
                         modifier = Modifier
                             .clip(RoundedCornerShape(100))
-                            .clickable(
+                            .onClickable(
                                 interactionSource = remember { MutableInteractionSource() },
                                 indication = rememberRipple(bounded = false, 24.dp),
                                 role = Role.Button
@@ -472,7 +472,7 @@ fun SearchBox(
                 Box(
                     modifier = Modifier
                         .clip(RoundedCornerShape(100))
-                        .clickable(
+                        .onClickable(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = rememberRipple(bounded = false, 24.dp),
                             role = Role.Button

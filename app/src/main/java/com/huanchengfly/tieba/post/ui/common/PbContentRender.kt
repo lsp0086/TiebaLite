@@ -1,6 +1,5 @@
 package com.huanchengfly.tieba.post.ui.common
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
@@ -208,7 +207,7 @@ data class VideoContentRender(
                     imageUri = picUrl,
                     contentDescription = stringResource(id = R.string.desc_video),
                     modifier = picModifier
-                        .clickable {
+                        .onClickable {
                             navigator.navigate(
                                 WebViewPageDestination(webUrl)
                             )

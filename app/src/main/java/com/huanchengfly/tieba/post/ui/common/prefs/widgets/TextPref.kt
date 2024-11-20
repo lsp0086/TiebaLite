@@ -1,12 +1,12 @@
 package com.huanchengfly.tieba.post.ui.common.prefs.widgets
 
-import androidx.compose.foundation.clickable
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.huanchengfly.tieba.post.onClickable
 import com.huanchengfly.tieba.post.ui.common.prefs.PrefsListItem
 import com.huanchengfly.tieba.post.ui.common.prefs.ifNotNullThen
 
@@ -44,7 +44,7 @@ fun TextPref(
 ) {
     PrefsListItem(
         text = { Text(title) },
-        modifier = if (onClick != null && enabled) modifier.clickable { onClick() } else modifier,
+        modifier = if (onClick != null && enabled) modifier.onClickable { onClick() } else modifier,
         enabled = enabled,
         darkenOnDisable = darkenOnDisable,
         textColor = textColor,

@@ -1,7 +1,6 @@
 package com.huanchengfly.tieba.post.ui.page.main.notifications.list
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.pageViewModel
+import com.huanchengfly.tieba.post.onClickable
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.common.theme.compose.pullRefreshIndicator
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
@@ -120,7 +120,7 @@ fun NotificationsListPage(
                         ) {
                             Column(
                                 modifier = Modifier
-                                    .clickable {
+                                    .onClickable {
                                         if (info.isFloor == "1") {
                                             navigator.navigate(
                                                 SubPostsPageDestination(
@@ -188,7 +188,7 @@ fun NotificationsListPage(
                                         modifier = Modifier
                                             .fillMaxWidth()
                                             .clip(RoundedCornerShape(6.dp))
-                                            .clickable {
+                                            .onClickable {
                                                 if ("1" == info.isFloor && info.quotePid != null) {
                                                     navigator.navigate(
                                                         SubPostsPageDestination(

@@ -2,7 +2,6 @@ package com.huanchengfly.tieba.post.ui.page.main.explore.personalized
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -37,6 +36,7 @@ import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.api.models.protos.personalized.DislikeReason
 import com.huanchengfly.tieba.post.api.models.protos.personalized.ThreadPersonalized
 import com.huanchengfly.tieba.post.arch.ImmutableHolder
+import com.huanchengfly.tieba.post.onClickable
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.widgets.compose.ClickMenu
 import com.huanchengfly.tieba.post.ui.widgets.compose.VerticalGrid
@@ -87,7 +87,7 @@ fun Dislike(
                         modifier = Modifier
                             .clip(RoundedCornerShape(6.dp))
                             .background(color = ExtendedTheme.colors.primary)
-                            .clickable {
+                            .onClickable {
                                 dismiss()
                                 onDislike(clickTime, selectedReasons.toImmutableList())
                             }
@@ -127,7 +127,7 @@ fun Dislike(
                                 .fillMaxWidth()
                                 .clip(RoundedCornerShape(6.dp))
                                 .background(color = backgroundColor)
-                                .clickable {
+                                .onClickable {
                                     if (selectedReasons.contains(it)) {
                                         selectedReasons.remove(it)
                                     } else {

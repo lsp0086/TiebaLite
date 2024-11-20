@@ -4,7 +4,6 @@ import android.content.pm.ActivityInfo
 import android.util.Log
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -789,7 +788,7 @@ fun FeedCard(
                         modifier = Modifier
                             .clip(RoundedCornerShape(6.dp))
                             .background(ExtendedTheme.colors.floorCard)
-                            .clickable {
+                            .onClickable {
                                 onClickOriginThread(it.get())
                             }
                             .padding(16.dp)
@@ -871,7 +870,7 @@ fun FeedCard(
                         modifier = Modifier
                             .clip(RoundedCornerShape(6.dp))
                             .background(ExtendedTheme.colors.floorCard)
-                            .clickable {
+                            .onClickable {
                                 onClickOriginThread(it.get())
                             }
                             .padding(16.dp)

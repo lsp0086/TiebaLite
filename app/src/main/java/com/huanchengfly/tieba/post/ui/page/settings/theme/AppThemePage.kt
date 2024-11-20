@@ -4,7 +4,6 @@ import android.os.Build
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -338,7 +337,7 @@ fun AppThemePage(
                                         )
                                     )
                                 )
-                                .clickable {
+                                .onClickable {
                                     ThemeUtil.setUseDynamicTheme(true)
                                 }
                                 .padding(all = 16.dp)
@@ -384,7 +383,7 @@ fun AppThemePage(
                                     .background(
                                         color = customPrimaryColor,
                                     )
-                                    .clickable {
+                                    .onClickable {
                                         customPrimaryColorDialogState.show()
                                     }
                                     .padding(all = 16.dp)
@@ -411,7 +410,7 @@ fun AppThemePage(
                                 modifier = Modifier
                                     .weight(1f)
                                     .clip(RoundedCornerShape(6.dp))
-                                    .clickable {
+                                    .onClickable {
                                         context.goToActivity<TranslucentThemeActivity>()
                                     },
                                 contentAlignment = Alignment.Center

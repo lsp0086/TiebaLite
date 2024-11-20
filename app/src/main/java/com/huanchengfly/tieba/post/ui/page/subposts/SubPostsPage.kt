@@ -2,7 +2,6 @@ package com.huanchengfly.tieba.post.ui.page.subposts
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -51,6 +50,7 @@ import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.onEvent
 import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.arch.wrapImmutable
+import com.huanchengfly.tieba.post.onClickable
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.common.theme.compose.threadBottomBar
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
@@ -359,7 +359,7 @@ internal fun SubPostsContent(
                                     .weight(1f)
                                     .clip(RoundedCornerShape(6.dp))
                                     .background(ExtendedTheme.colors.bottomBarSurface)
-                                    .clickable {
+                                    .onClickable {
                                         val fid = forum?.get { id } ?: forumId
                                         val forumName = forum?.get { name }
                                         if (!forumName.isNullOrEmpty()) {

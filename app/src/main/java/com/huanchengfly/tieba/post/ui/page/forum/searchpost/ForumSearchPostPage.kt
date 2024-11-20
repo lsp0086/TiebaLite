@@ -4,7 +4,6 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -343,7 +342,7 @@ fun ForumSearchPostPage(
                                 Box(
                                     modifier = Modifier
                                         .clip(RoundedCornerShape(100))
-                                        .clickable(
+                                        .onClickable(
                                             interactionSource = remember { MutableInteractionSource() },
                                             indication = rememberRipple(bounded = false, 24.dp),
                                             role = Role.Button,

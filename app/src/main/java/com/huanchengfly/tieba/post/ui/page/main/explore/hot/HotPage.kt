@@ -3,7 +3,6 @@ package com.huanchengfly.tieba.post.ui.page.main.explore.hot
 import android.graphics.Typeface
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -196,7 +195,7 @@ fun HotPage(
                                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                                         modifier = Modifier
                                             .fillMaxWidth()
-                                            .clickable {
+                                            .onClickable {
                                                 navigator.navigate(HotTopicListPageDestination)
                                             }
                                             .padding(vertical = 8.dp)

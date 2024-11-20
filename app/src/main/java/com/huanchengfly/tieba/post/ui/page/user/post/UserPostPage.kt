@@ -1,7 +1,6 @@
 package com.huanchengfly.tieba.post.ui.page.user.post
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -44,6 +43,7 @@ import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.getOrNull
 import com.huanchengfly.tieba.post.arch.onGlobalEvent
 import com.huanchengfly.tieba.post.arch.pageViewModel
+import com.huanchengfly.tieba.post.onClickable
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.common.theme.compose.pullRefreshIndicator
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
@@ -368,7 +368,7 @@ fun UserPostItem(
                             verticalArrangement = Arrangement.spacedBy(8.dp),
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clickable {
+                                .onClickable {
                                     onClick(
                                         item.get { thread_id },
                                         it.postId,
@@ -402,7 +402,7 @@ fun UserPostItem(
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(6.dp))
                         .background(ExtendedTheme.colors.floorCard)
-                        .clickable {
+                        .onClickable {
                             onClickOriginThread(item.get { thread_id })
                         }
                         .padding(horizontal = 16.dp, vertical = 8.dp),

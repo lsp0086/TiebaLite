@@ -3,7 +3,6 @@ package com.huanchengfly.tieba.post.ui.page.main.user
 import android.graphics.Typeface
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -48,6 +47,7 @@ import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.models.database.Account
+import com.huanchengfly.tieba.post.onClickable
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.common.theme.compose.pullRefreshIndicator
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
@@ -286,7 +286,7 @@ fun UserPage(
                     InfoCard(
                         modifier = Modifier
                             .padding(top = 8.dp)
-                            .clickable {
+                            .onClickable {
                                 navigator.navigate(UserProfilePageDestination(account!!.uid.toLong()))
                             }
                             .padding(horizontal = 16.dp, vertical = 16.dp),

@@ -3,7 +3,6 @@ package com.huanchengfly.tieba.post.ui.page.search
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -337,7 +336,7 @@ private fun SearchSuggestionList(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     modifier = Modifier
-                        .clickable {
+                        .onClickable {
                             onItemClick(it)
                         }
                         .padding(horizontal = 16.dp, vertical = 8.dp)
@@ -578,7 +577,7 @@ private fun SearchTopBar(
             Box(
                 modifier = Modifier
                     .clip(RoundedCornerShape(100))
-                    .clickable(
+                    .onClickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = rememberRipple(bounded = false, 24.dp),
                         role = Role.Button,

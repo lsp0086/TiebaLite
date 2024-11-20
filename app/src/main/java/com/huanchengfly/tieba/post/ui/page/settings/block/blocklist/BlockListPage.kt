@@ -1,7 +1,6 @@
 package com.huanchengfly.tieba.post.ui.page.settings.block.blocklist
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -48,6 +47,7 @@ import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.onEvent
 import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.models.database.Block
+import com.huanchengfly.tieba.post.onClickable
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.page.main.BottomNavigationDivider
 import com.huanchengfly.tieba.post.ui.widgets.compose.BackNavigationIcon
@@ -167,7 +167,7 @@ fun BlockListPage(
                         horizontalArrangement = Arrangement.Center,
                         modifier = Modifier
                             .weight(1f)
-                            .clickable {
+                            .onClickable {
                                 addBlockCategory = Block.CATEGORY_BLACK_LIST
                                 dialogState.show()
                             }
@@ -190,7 +190,7 @@ fun BlockListPage(
                         horizontalArrangement = Arrangement.Center,
                         modifier = Modifier
                             .weight(1f)
-                            .clickable {
+                            .onClickable {
                                 addBlockCategory = Block.CATEGORY_WHITE_LIST
                                 dialogState.show()
                             }
