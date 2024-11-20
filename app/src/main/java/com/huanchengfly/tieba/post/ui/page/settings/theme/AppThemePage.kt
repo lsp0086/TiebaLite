@@ -5,7 +5,6 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -72,6 +71,7 @@ import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.TranslucentThemeActivity
 import com.huanchengfly.tieba.post.components.dialogs.CustomThemeDialog
 import com.huanchengfly.tieba.post.goToActivity
+import com.huanchengfly.tieba.post.onClickable
 import com.huanchengfly.tieba.post.rememberPreferenceAsMutableState
 import com.huanchengfly.tieba.post.rememberPreferenceAsState
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
@@ -253,9 +253,7 @@ fun AppThemePage(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null,
+                    .onClickable(
                         onClick = {
                             customToolbarPrimaryColor =
                                 !customToolbarPrimaryColor
@@ -277,9 +275,7 @@ fun AppThemePage(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null,
+                        .onClickable(
                             onClick = {
                                 customStatusBarFontDark =
                                     !customStatusBarFontDark
@@ -565,7 +561,7 @@ private fun ThemeItem(
         modifier = Modifier
             .fillMaxWidth()
             .height(IntrinsicSize.Min)
-            .clickable(
+            .onClickable (
                 onClickLabel = themeName,
                 onClick = onClick
             )

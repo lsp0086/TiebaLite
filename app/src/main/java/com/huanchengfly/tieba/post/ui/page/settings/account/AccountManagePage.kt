@@ -154,8 +154,7 @@ fun AccountManagePage(
                         append(stringResource(id = R.string.tip_account_error))
                     },
                     modifier = Modifier
-                        .padding(16.dp)
-                        .padding(start = 8.dp)
+                        .padding(horizontal =  4.dp, vertical = 10.dp)
                         .clip(RoundedCornerShape(6.dp))
                         .background(color = ExtendedTheme.colors.chip)
                         .padding(12.dp),

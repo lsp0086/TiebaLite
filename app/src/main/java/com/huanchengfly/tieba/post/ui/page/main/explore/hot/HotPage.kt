@@ -431,7 +431,7 @@ private fun ThreadListTab(
             .fillMaxWidth()
             .clip(RoundedCornerShape(100))
             .background(backgroundColor)
-            .clickable(onClick = onSelected)
+            .onClick(onClick = onSelected)
             .padding(vertical = 4.dp),
         fontSize = 12.sp,
         fontWeight = FontWeight.Bold

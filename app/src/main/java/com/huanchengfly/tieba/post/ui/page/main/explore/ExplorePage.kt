@@ -5,14 +5,11 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -70,7 +67,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import com.google.accompanist.placeholder.placeholder
-import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.*
 import com.huanchengfly.tieba.post.arch.GlobalEvent
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.onGlobalEvent
@@ -104,22 +101,7 @@ import com.huanchengfly.tieba.post.utils.appPreferences
 import kotlinx.collections.immutable.persistentListOf
 import java.text.DecimalFormat
 
-fun RGBA(red:Int,green:Int,blue:Int,alpha:Float):Color{
-    return Color(red,green,blue,(255 * alpha).toInt())
-}
-fun <T> List<T>.customSort(comparator: (T, T) -> Boolean): List<T> {
-    val sortedList = this.toMutableList()
-    for (i in 0 until sortedList.size - 1) {
-        for (j in i + 1 until sortedList.size) {
-            if (!comparator(sortedList[i], sortedList[j])) {
-                val temp = sortedList[i]
-                sortedList[i] = sortedList[j]
-                sortedList[j] = temp
-            }
-        }
-    }
-    return sortedList
-}
+
 @Immutable
 data class ExplorePageItem(
     val id: String,
@@ -586,10 +568,7 @@ fun ExplorePage(
                                     Row(
                                         verticalAlignment = CenterVertically,
                                         modifier = Modifier
-                                            .clickable(
-                                                interactionSource = remember { MutableInteractionSource() },
-                                                indication = null
-                                            ) {
+                                            .onClickable{
                                                 viewModel.send(
                                                     ExploreUiIntent.ToggleHistory(
                                                         expandHistoryForum
@@ -627,10 +606,7 @@ fun ExplorePage(
                                                     modifier = Modifier
                                                         .width(60.dp)
                                                         .wrapContentHeight()
-                                                        .clickable(
-                                                            interactionSource = remember { MutableInteractionSource() },
-                                                            indication = null
-                                                        ) {
+                                                        .onClickable {
                                                             navigator.navigate(
                                                                 ForumPageDestination(
                                                                     it.data
@@ -714,9 +690,7 @@ fun ExplorePage(
                                 Text(text = if (showFollowedType == 0) "默认排序" else "等级排序",
                                     fontSize = 12.sp,
                                     color = RGBA(168,168,168,1f),
-                                    modifier = Modifier.clickable(
-                                    interactionSource = remember { MutableInteractionSource() },
-                                    indication = null)
+                                    modifier = Modifier.onClickable
                                 {
                                         viewModel.send(
                                             ExploreUiIntent.ChangeFollowedType(showFollowedType)
@@ -760,9 +734,7 @@ fun ExplorePage(
                                 }
                                 if (forums.size > 20){
                                     Row (
-                                        modifier =  Modifier.fillMaxWidth().height(44.dp).clickable(
-                                        interactionSource = remember { MutableInteractionSource() },
-                                        indication = null) {
+                                        modifier =  Modifier.fillMaxWidth().height(44.dp).onClickable {
                                             viewModel.send(
                                                 ExploreUiIntent.ShowAllFollowed(showAllFollowed)
                                             )

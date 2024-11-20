@@ -70,6 +70,8 @@ import com.huanchengfly.tieba.post.arch.emitGlobalEventSuspend
 import com.huanchengfly.tieba.post.arch.onEvent
 import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.models.database.SearchHistory
+import com.huanchengfly.tieba.post.onClickable
+import com.huanchengfly.tieba.post.onFullClickable
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.common.theme.compose.TiebaLiteTheme
 import com.huanchengfly.tieba.post.ui.page.ProvideNavigator
@@ -480,7 +482,7 @@ private fun SearchHistoryList(
             if (hasItem) {
                 Text(
                     text = stringResource(id = R.string.button_clear_all),
-                    modifier = Modifier.clickable(onClick = onClear),
+                    modifier = Modifier.onClickable(onClick = onClear),
                     style = MaterialTheme.typography.button
                 )
             }
@@ -496,7 +498,7 @@ private fun SearchHistoryList(
                     modifier = Modifier
                         .padding(bottom = 8.dp)
                         .clip(RoundedCornerShape(100))
-                        .combinedClickable(
+                        .onFullClickable(
                             onClick = { onSearchHistoryClick(searchHistory) },
                             onLongClick = { onDelete(searchHistory) }
                         )

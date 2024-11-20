@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -81,6 +80,7 @@ import com.huanchengfly.tieba.post.arch.ImmutableHolder
 import com.huanchengfly.tieba.post.arch.wrapImmutable
 import com.huanchengfly.tieba.post.findActivity
 import com.huanchengfly.tieba.post.goToActivity
+import com.huanchengfly.tieba.post.onClickable
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.common.windowsizeclass.WindowWidthSizeClass
 import com.huanchengfly.tieba.post.ui.page.photoview.PhotoViewActivity
@@ -212,7 +212,7 @@ fun Card(
     onClick: (() -> Unit)? = null,
     contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp),
 ) {
-    val cardModifier = if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier
+    val cardModifier = if (onClick != null) Modifier.onClickable(onClick = onClick) else Modifier
 
     val paddingModifier = if (action != null) Modifier.padding(top = 16.dp)
     else Modifier.padding(vertical = 16.dp)
@@ -371,7 +371,7 @@ fun ForumInfoChip(
             .height(IntrinsicSize.Min)
             .clip(RoundedCornerShape(4.dp))
             .background(color = ExtendedTheme.colors.chip)
-            .clickable(onClick = onClick)
+            .onClickable(onClick = onClick)
             .padding(4.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -406,7 +406,7 @@ private fun MediaPlaceholder(
         modifier = modifier
             .clip(RoundedCornerShape(6.dp))
             .background(ExtendedTheme.colors.chip)
-            .clickable(
+            .onClickable(
                 enabled = onClick != null
             ) { onClick?.invoke() }
             .padding(horizontal = 16.dp, vertical = 8.dp),
@@ -483,9 +483,7 @@ private fun ThreadMedia(
                         )
                     }
                     Box(
-                        modifier = Modifier.clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null,
+                        modifier = Modifier.onClickable(
                             onClick = {}
                         )
                     ) {
@@ -944,7 +942,7 @@ private fun ActionBtn(
     color: Color = LocalContentColor.current,
     onClick: (() -> Unit)? = null,
 ) {
-    val clickableModifier = if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier
+    val clickableModifier = if (onClick != null) Modifier.onClickable(onClick = onClick) else Modifier
     Row(
         modifier = clickableModifier
             .padding(vertical = 16.dp)

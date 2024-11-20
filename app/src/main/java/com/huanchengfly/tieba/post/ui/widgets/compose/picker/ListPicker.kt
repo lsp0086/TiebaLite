@@ -1,7 +1,6 @@
 package com.huanchengfly.tieba.post.ui.widgets.compose.picker
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.onClickable
 import com.huanchengfly.tieba.post.ui.widgets.compose.ProvideContentColor
 import com.huanchengfly.tieba.post.ui.widgets.compose.TextWithMinWidth
 import kotlinx.collections.immutable.ImmutableList
@@ -55,7 +55,7 @@ fun <ItemValue> ListSinglePicker(
                             alpha = if (selectedPosition == it) 0.1f else 0f
                         )
                     )
-                    .clickable(enabled = enabled) {
+                    .onClickable(enabled = enabled) {
                         onItemSelected(
                             it,
                             itemTitles[it],

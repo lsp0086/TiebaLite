@@ -15,6 +15,16 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.ColorRes
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Indication
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.Role
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.gson.Gson
@@ -25,7 +35,45 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import java.io.File
 import kotlin.math.roundToInt
+fun RGBA(red:Int,green:Int,blue:Int,alpha:Float): Color {
+    return Color(red,green,blue,(255 * alpha).toInt())
+}
+fun <T> List<T>.customSort(comparator: (T, T) -> Boolean): List<T> {
+    val sortedList = this.toMutableList()
+    for (i in 0 until sortedList.size - 1) {
+        for (j in i + 1 until sortedList.size) {
+            if (!comparator(sortedList[i], sortedList[j])) {
+                val temp = sortedList[i]
+                sortedList[i] = sortedList[j]
+                sortedList[j] = temp
+            }
+        }
+    }
+    return sortedList
+}
 
+@Composable
+fun Modifier.onClickable(interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+                         indication: Indication? = null,
+                         enabled: Boolean = true,
+                         onClickLabel: String? = null,
+                         role: Role? = null,
+                         onClick: () -> Unit = {}) :Modifier{
+    return this.clickable(interactionSource,indication,enabled,onClickLabel,role,onClick)
+}
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun Modifier.onFullClickable(interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+                             indication: Indication? = null,
+                             enabled: Boolean = true,
+                             onClickLabel: String? = null,
+                             role: Role? = null,
+                             onLongClickLabel: String? = null,
+                             onLongClick: (() -> Unit)? = null,
+                             onDoubleClick: (() -> Unit)? = null,
+                             onClick: () -> Unit = {}) : Modifier{
+    return this.combinedClickable(interactionSource,indication,enabled,onClickLabel,role,onLongClickLabel,onLongClick,onDoubleClick,onClick)
+}
 private val Context.scaledDensity: Float
     get() = resources.displayMetrics.scaledDensity
 

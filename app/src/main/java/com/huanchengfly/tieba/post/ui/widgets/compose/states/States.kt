@@ -1,6 +1,5 @@
 package com.huanchengfly.tieba.post.ui.widgets.compose.states
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,6 +18,7 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.onClickable
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.widgets.compose.Button
 import com.huanchengfly.tieba.post.ui.widgets.compose.TipScreen
@@ -88,7 +88,7 @@ fun StateScreen(
     content: @Composable StateScreenScope.() -> Unit,
 ) {
     val stateScreenScope = remember(key1 = onReload) { StateScreenScope(onReload) }
-    val clickableModifier = if (onReload != null && clickToReload) Modifier.clickable(
+    val clickableModifier = if (onReload != null && clickToReload) Modifier.onClickable (
         enabled = isEmpty && !isLoading,
         onClick = onReload
     ) else Modifier

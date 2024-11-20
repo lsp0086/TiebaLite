@@ -1,8 +1,6 @@
 package com.huanchengfly.tieba.post.ui.page.settings.about
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -32,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import com.huanchengfly.tieba.post.BuildConfig
 import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.onClickable
 import com.huanchengfly.tieba.post.toastShort
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.widgets.compose.BackNavigationIcon
@@ -111,9 +110,7 @@ fun AboutPage(
                     text = stringResource(id = R.string.tip_about, BuildConfig.VERSION_NAME),
                     style = MaterialTheme.typography.caption,
                     color = ExtendedTheme.colors.textSecondary,
-                    modifier = Modifier.clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null,
+                    modifier = Modifier.onClickable(
                         onClick = {
                             val currentTime = System.currentTimeMillis()
                             if (currentTime - lastClickTime < 500) {

@@ -6,7 +6,6 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -115,6 +114,7 @@ import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.arch.wrapImmutable
 import com.huanchengfly.tieba.post.models.ThreadHistoryInfoBean
 import com.huanchengfly.tieba.post.models.database.History
+import com.huanchengfly.tieba.post.onClickable
 import com.huanchengfly.tieba.post.toJson
 import com.huanchengfly.tieba.post.toastShort
 import com.huanchengfly.tieba.post.ui.common.PbContentRender
@@ -292,9 +292,7 @@ private fun BottomBarPlaceholder() {
             .height(IntrinsicSize.Min)
             .background(ExtendedTheme.colors.bottomBar)
             // 拦截点击事件
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null,
+            .onClickable(
                 onClick = {}
             )
             .padding(horizontal = 16.dp),
@@ -1153,9 +1151,7 @@ fun ThreadPage(
                         hasAgreed = hasThreadAgreed,
                         agreeNum = threadAgreeNum,
                         modifier = Modifier
-                            .clickable(
-                                interactionSource = remember { MutableInteractionSource() },
-                                indication = null,
+                            .onClickable(
                                 onClick = {}
                             )
                     )
@@ -1437,9 +1433,7 @@ fun ThreadPage(
                                                     text = stringResource(R.string.text_all),
                                                     modifier = Modifier
                                                         .padding(horizontal = 8.dp)
-                                                        .clickable(
-                                                            interactionSource = remember { MutableInteractionSource() },
-                                                            indication = null,
+                                                        .onClickable(
                                                             enabled = isSeeLz
                                                         ) {
                                                             if (isSeeLz) {
@@ -1462,9 +1456,7 @@ fun ThreadPage(
                                                     text = stringResource(R.string.title_see_lz),
                                                     modifier = Modifier
                                                         .padding(horizontal = 8.dp)
-                                                        .clickable(
-                                                            interactionSource = remember { MutableInteractionSource() },
-                                                            indication = null,
+                                                        .onClickable(
                                                             enabled = !isSeeLz
                                                         ) {
                                                             if (!isSeeLz) {
@@ -1611,7 +1603,7 @@ private fun TopBar(
                             .height(IntrinsicSize.Min)
                             .clip(RoundedCornerShape(100))
                             .background(ExtendedTheme.colors.chip)
-                            .clickable(onClick = onForumClick)
+                            .onClickable(onClick = onForumClick)
                             .padding(4.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -1678,7 +1670,7 @@ private fun BottomBar(
                         .weight(1f)
                         .clip(RoundedCornerShape(6.dp))
                         .background(ExtendedTheme.colors.bottomBarSurface)
-                        .clickable(onClick = onClickReply)
+                        .onClickable(onClick = onClickReply)
                         .padding(8.dp),
                 ) {
                     Text(
@@ -1703,7 +1695,7 @@ private fun BottomBar(
             Box(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .clickable(onClick = onClickMore)
+                    .onClickable(onClick = onClickMore)
                     .padding(horizontal = 4.dp),
                 contentAlignment = Alignment.Center
             ) {

@@ -6,8 +6,6 @@ import android.graphics.Typeface
 import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -94,6 +92,7 @@ import com.huanchengfly.tieba.post.dataStore
 import com.huanchengfly.tieba.post.getInt
 import com.huanchengfly.tieba.post.models.ForumHistoryExtra
 import com.huanchengfly.tieba.post.models.database.History
+import com.huanchengfly.tieba.post.onClickable
 import com.huanchengfly.tieba.post.toastShort
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
@@ -231,9 +230,7 @@ private fun ForumHeader(
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    modifier = Modifier.clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null,
+                    modifier = Modifier.onClickable(
                         onClick = onOpenForumInfo
                     )
                 ) {

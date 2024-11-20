@@ -3,8 +3,6 @@ package com.huanchengfly.tieba.post.ui.widgets.compose.video
 import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
@@ -25,7 +23,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Fullscreen
 import androidx.compose.material.icons.rounded.FullscreenExit
 import androidx.compose.material.icons.rounded.PlayArrow
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
@@ -49,6 +46,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.github.panpf.sketch.compose.AsyncImage
 import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.onClickable
 import com.huanchengfly.tieba.post.ui.widgets.compose.video.util.getDurationString
 
 internal val LocalVideoPlayerController =
@@ -276,10 +274,7 @@ private fun FullScreenButton() {
     Box(
         modifier = Modifier
             .padding(8.dp)
-            .clickable(
-                indication = rememberRipple(bounded = false),
-                interactionSource = remember { MutableInteractionSource() }
-            ) {
+            .onClickable{
                 videoPlayerController.toggleFullScreen()
             }
     ) {

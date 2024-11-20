@@ -183,7 +183,7 @@ private fun UserLikeForumItem(
 ) {
     Row(
         modifier = Modifier
-            .clickable(onClick = onClick)
+            .onClick(onClick = onClick)
             .then(modifier),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)

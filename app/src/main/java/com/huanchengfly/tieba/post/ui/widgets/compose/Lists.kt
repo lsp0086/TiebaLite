@@ -28,7 +28,7 @@ fun ListMenuItem(
     customContent: @Composable (RowScope.() -> Unit)? = null,
 ) {
     val menuModifier = if (onClick != null) {
-        Modifier.clickable(onClick = onClick)
+        Modifier.onClick(onClick = onClick)
     } else {
         Modifier
     }

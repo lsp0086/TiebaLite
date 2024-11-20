@@ -2,7 +2,6 @@ package com.huanchengfly.tieba.post.ui.widgets.compose
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.LocalIndication
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -28,6 +27,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
+import com.huanchengfly.tieba.post.onClickable
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 
 @Composable
@@ -50,7 +50,7 @@ fun Button(
     Surface(
         modifier = Modifier
             .clip(shape)
-            .clickable(
+            .onClickable(
                 onClick = onClick,
                 enabled = enabled,
                 interactionSource = interactionSource,

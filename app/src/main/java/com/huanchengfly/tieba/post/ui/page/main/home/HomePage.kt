@@ -96,7 +96,7 @@ fun SearchBox(
             shape = RoundedCornerShape(6.dp),
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable(onClick = onClick)
+                .onClick(onClick = onClick)
         ) {
             Row(
                 verticalAlignment = CenterVertically,

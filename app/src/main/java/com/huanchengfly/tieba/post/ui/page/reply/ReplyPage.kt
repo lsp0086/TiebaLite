@@ -9,7 +9,6 @@ import android.view.View
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -90,6 +89,7 @@ import com.huanchengfly.tieba.post.arch.onEvent
 import com.huanchengfly.tieba.post.arch.onGlobalEvent
 import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.models.database.Draft
+import com.huanchengfly.tieba.post.onClickable
 import com.huanchengfly.tieba.post.pxToDpFloat
 import com.huanchengfly.tieba.post.toMD5
 import com.huanchengfly.tieba.post.toastShort
@@ -891,10 +891,7 @@ private fun ImagePanel(
         Row(
             modifier = Modifier
                 .padding(vertical = 16.dp)
-                .clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null
-                ) {
+                .onClickable {
                     onIsOriginImageChange(!isOriginImage)
                 },
             horizontalArrangement = Arrangement.spacedBy(8.dp),

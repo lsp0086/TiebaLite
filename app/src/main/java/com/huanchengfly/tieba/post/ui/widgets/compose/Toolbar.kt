@@ -53,6 +53,7 @@ import androidx.compose.ui.unit.dp
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.arch.GlobalEvent
 import com.huanchengfly.tieba.post.arch.emitGlobalEvent
+import com.huanchengfly.tieba.post.onFullClickable
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.utils.compose.calcStatusBarColor
 
@@ -357,9 +358,7 @@ fun TopAppBarContainer(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .combinedClickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null,
+                .onFullClickable(
                     onDoubleClick = {
                         Log.i("TopAppBarContainer", "TopAppBarContainer: onDoubleClick")
                         coroutineScope.emitGlobalEvent(GlobalEvent.ScrollToTop)

@@ -2,7 +2,6 @@ package com.huanchengfly.tieba.post.ui.widgets.compose
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -19,6 +18,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.huanchengfly.tieba.post.onClickable
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.common.theme.compose.invertChipBackground
 import com.huanchengfly.tieba.post.ui.common.theme.compose.invertChipContent
@@ -49,7 +49,7 @@ fun Chip(
             modifier = modifier
                 .clip(shape)
                 .background(color = animatedBackgroundColor)
-                .clickable(enabled = onClick != null) {
+                .onClickable(enabled = onClick != null) {
                     onClick?.invoke()
                 }
                 .padding(horizontal = 16.dp, vertical = 4.dp),

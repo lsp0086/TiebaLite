@@ -12,8 +12,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -69,6 +67,7 @@ import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.BaseActivity
 import com.huanchengfly.tieba.post.arch.collectIn
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
+import com.huanchengfly.tieba.post.onClickable
 import com.huanchengfly.tieba.post.toastShort
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.common.theme.compose.TiebaLiteTheme
@@ -409,10 +408,7 @@ fun EditProfileCard(
                             end.linkTo(parent.end)
                             width = Dimension.fillToConstraints
                         }
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null
-                        ) { onModifySex?.invoke() }
+                        .onClickable { onModifySex?.invoke() }
                         .placeholder(visible = loading)
                 ) {
                     Text(
