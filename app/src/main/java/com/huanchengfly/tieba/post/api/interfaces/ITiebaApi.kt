@@ -1141,6 +1141,26 @@ interface ITiebaApi {
         bsk: String
     ): Deferred<ApiResult<WebReplyResultBean>>
 
+    fun browserWebReplyAsync(
+        kw: String,
+        fid: String,
+        tid: String,
+        quoteId:String? = null,
+        tbs: String,
+        content: String,
+        floor: String?
+    ): Deferred<ApiResult<BrowserWebPostReplyResponseBean>>
+
+    fun browserWebReplyFlow(
+        kw: String,
+        fid: String,
+        tid: String,
+        quoteId:String? = null,
+        tbs: String,
+        content: String,
+        floor: String?
+    ): Flow<BrowserWebPostReplyResponseBean>
+
     /**
      * 回贴 - 回复楼中楼（web 接口）（异步）
      *
