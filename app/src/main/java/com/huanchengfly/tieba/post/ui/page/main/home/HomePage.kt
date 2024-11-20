@@ -47,6 +47,7 @@ import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.arch.GlobalEvent
 import com.huanchengfly.tieba.post.arch.emitGlobalEvent
 import com.huanchengfly.tieba.post.arch.onGlobalEvent
+import com.huanchengfly.tieba.post.onClickable
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
 import com.huanchengfly.tieba.post.ui.page.destinations.LoginPageDestination
@@ -96,7 +97,7 @@ fun SearchBox(
             shape = RoundedCornerShape(6.dp),
             modifier = Modifier
                 .fillMaxWidth()
-                .onClick(onClick = onClick)
+                .onClickable(onClick = onClick)
         ) {
             Row(
                 verticalAlignment = CenterVertically,

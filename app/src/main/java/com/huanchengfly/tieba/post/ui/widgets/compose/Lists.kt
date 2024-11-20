@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.huanchengfly.tieba.post.onClickable
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 
 @Composable
@@ -28,7 +29,7 @@ fun ListMenuItem(
     customContent: @Composable (RowScope.() -> Unit)? = null,
 ) {
     val menuModifier = if (onClick != null) {
-        Modifier.onClick(onClick = onClick)
+        Modifier.onClickable(onClick = onClick)
     } else {
         Modifier
     }

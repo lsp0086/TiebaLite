@@ -31,6 +31,7 @@ import com.huanchengfly.tieba.post.api.models.SearchForumBean
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.onGlobalEvent
 import com.huanchengfly.tieba.post.arch.pageViewModel
+import com.huanchengfly.tieba.post.onClickable
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.common.theme.compose.pullRefreshIndicator
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
@@ -195,7 +196,7 @@ private fun SearchForumItem(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .onClick(onClick = onClick)
+            .onClickable(onClick = onClick)
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(16.dp),

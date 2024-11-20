@@ -29,6 +29,7 @@ import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.getOrNull
 import com.huanchengfly.tieba.post.arch.onGlobalEvent
 import com.huanchengfly.tieba.post.arch.pageViewModel
+import com.huanchengfly.tieba.post.onClickable
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.common.theme.compose.pullRefreshIndicator
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
@@ -183,7 +184,7 @@ private fun UserLikeForumItem(
 ) {
     Row(
         modifier = Modifier
-            .onClick(onClick = onClick)
+            .onClickable(onClick = onClick)
             .then(modifier),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
