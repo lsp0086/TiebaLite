@@ -218,4 +218,28 @@ interface WebTiebaApi {
         @Field("_BSK") bsk: String,
         @retrofit2.http.Header(Header.REFERER) referer: String
     ): Deferred<ApiResult<WebReplyResultBean>>
+    @Headers(
+        "${Header.HOST}: tieba.baidu.com",
+        "${Header.ORIGIN}: https://tieba.baidu.com",
+        "X-Requested-With: XMLHttpRequest"
+    )
+    @POST("/f/commit/post/add")
+    @FormUrlEncoded
+    fun browserWebReplyAsync(
+        @Field("ie") ie:String = "utf-8",
+        @Field("kw") kw:String,
+        @Field("fid") fid:String,
+        @Field("tid") tid:String,
+        @Field("quote_id") quoteId:String? = null,
+        @Field("floor_num") floor: String? = null,
+        @Field("rich_text") rhText:String = "1",
+        @Field("tbs") tbsCode:String,
+        @Field("content") content: String,
+        @Field("lp_type") lpType:String = "0",
+        @Field("lp_sub_type") lpSub:String = "0",
+        @Field("new_vcode") vCode :String = "1",
+        @Field("tag") tag:String = "11",
+        @Field("repostid") repostid:String? = quoteId,
+    ): Deferred<ApiResult<BrowserWebPostReplyResponseBean>>
+
 }

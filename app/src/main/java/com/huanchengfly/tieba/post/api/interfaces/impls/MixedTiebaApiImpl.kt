@@ -17,6 +17,7 @@ import com.huanchengfly.tieba.post.api.getScreenHeight
 import com.huanchengfly.tieba.post.api.getScreenWidth
 import com.huanchengfly.tieba.post.api.interfaces.ITiebaApi
 import com.huanchengfly.tieba.post.api.models.AgreeBean
+import com.huanchengfly.tieba.post.api.models.BrowserWebPostReplyResponseBean
 import com.huanchengfly.tieba.post.api.models.CheckReportBean
 import com.huanchengfly.tieba.post.api.models.CollectDataBean
 import com.huanchengfly.tieba.post.api.models.CommonResponse
@@ -116,7 +117,6 @@ import com.huanchengfly.tieba.post.api.models.web.HotMessageListBean
 import com.huanchengfly.tieba.post.api.retrofit.ApiResult
 import com.huanchengfly.tieba.post.api.retrofit.RetrofitTiebaApi
 import com.huanchengfly.tieba.post.api.retrofit.body.MyMultipartBody
-import com.huanchengfly.tieba.post.api.retrofit.doIfSuccess
 import com.huanchengfly.tieba.post.api.retrofit.fetchIfSuccess
 import com.huanchengfly.tieba.post.api.retrofit.isSuccessful
 import com.huanchengfly.tieba.post.api.urlEncode
@@ -132,7 +132,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import okhttp3.RequestBody.Companion.asRequestBody
 import retrofit2.Call
@@ -875,6 +874,44 @@ object MixedTiebaApiImpl : ITiebaApi {
             bsk = bsk,
             referer = "https://tieba.baidu.com/p/$threadId?lp=5028&mo_device=1&is_jingpost=0&pn=$pn&"
         )
+
+
+    override fun browserWebReplyAsync(
+        kw: String,
+        fid: String,
+        tid: String,
+        quoteId:String?,
+        tbs: String,
+        content: String,
+        floor: String?
+    ): Deferred<ApiResult<BrowserWebPostReplyResponseBean>> {
+        return RetrofitTiebaApi.WEB_TIE_BA_API.browserWebReplyAsync(
+            kw = kw,
+            fid = fid,
+            tid = tid,
+            quoteId = quoteId,
+            tbsCode = tbs,
+            content = content,
+            floor = floor
+        )
+    }
+
+    override fun browserWebReplyFlow(
+        kw: String,
+        fid: String,
+        tid: String,
+        quoteId:String?,
+        tbs: String,
+        content: String,
+        floor: String?
+    ): Flow<BrowserWebPostReplyResponseBean>  = flow {
+        val result = withContext(Dispatchers.IO) {
+            browserWebReplyAsync(kw, fid, tid, quoteId, tbs, content, floor).await()
+        }
+        result.fetchIfSuccess {
+            emit(it)
+        }
+    }
 
     override fun webReplyAsync(
         forumId: String,
