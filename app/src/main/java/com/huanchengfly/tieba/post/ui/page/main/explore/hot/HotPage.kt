@@ -44,6 +44,7 @@ import com.huanchengfly.tieba.post.arch.GlobalEvent
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.onGlobalEvent
 import com.huanchengfly.tieba.post.arch.pageViewModel
+import com.huanchengfly.tieba.post.onClickable
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.common.theme.compose.OrangeA700
 import com.huanchengfly.tieba.post.ui.common.theme.compose.RedA700
@@ -431,7 +432,7 @@ private fun ThreadListTab(
             .fillMaxWidth()
             .clip(RoundedCornerShape(100))
             .background(backgroundColor)
-            .onClick(onClick = onSelected)
+            .onClickable(onClick = onSelected)
             .padding(vertical = 4.dp),
         fontSize = 12.sp,
         fontWeight = FontWeight.Bold
