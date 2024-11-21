@@ -3,12 +3,13 @@ package com.huanchengfly.tieba.post.ui.widgets.compose
 import android.content.pm.ActivityInfo
 import android.util.Log
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -18,9 +19,12 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.LocalContentColor
@@ -47,6 +51,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.SpanStyle
@@ -65,6 +70,8 @@ import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.RGBA
+import com.huanchengfly.tieba.post.api.models.SearchThreadBean
 import com.huanchengfly.tieba.post.api.models.protos.Media
 import com.huanchengfly.tieba.post.api.models.protos.OriginThreadInfo
 import com.huanchengfly.tieba.post.api.models.protos.PostInfoList
@@ -124,7 +131,7 @@ private fun UserHeader(
         avatar = {
             Avatar(
                 data = user.get { StringUtil.getAvatarUrl(portrait) },
-                size = Sizes.Small,
+                size = 24.dp,
                 contentDescription = null
             )
         },
@@ -139,7 +146,6 @@ private fun UserHeader(
                 color = ExtendedTheme.colors.text
             )
         },
-        onClick = onClick,
         desc = {
             Text(
                 text = DateTimeUtils.getRelativeTimeString(
@@ -148,6 +154,7 @@ private fun UserHeader(
                 )
             )
         },
+        onClick = onClick,
         content = content,
         modifier = modifier
     )
@@ -359,17 +366,30 @@ fun FeedCardPlaceholder() {
 
 @Composable
 fun ForumInfoChip(
-    imageUriProvider: () -> String?,
-    nameProvider: () -> String,
+    item: Any?,
     onClick: () -> Unit,
 ) {
-    val imageUri = imageUriProvider()
-    val name = nameProvider()
+    var imageUri:String? = null
+    var name:String = ""
+    var followNum = ""
+    when (item) {
+        is SimpleForum -> {
+            imageUri = item.avatar
+            name = item.name
+            followNum = "${item.memberNum}"
+        }
+        is PostInfoList -> {
+            name = item.forum_name
+        }
+        is SearchThreadBean.ThreadInfoBean -> {
+            imageUri = item.forumInfo.avatar
+            name = item.forumName
+        }
+    }
     Row(
         modifier = Modifier
-            .height(IntrinsicSize.Min)
-            .clip(RoundedCornerShape(4.dp))
-            .background(color = ExtendedTheme.colors.chip)
+            .height(36.dp)
+            .clip(RoundedCornerShape(8.dp))
             .onClickable(onClick = onClick)
             .padding(4.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -377,7 +397,7 @@ fun ForumInfoChip(
     ) {
         imageUri?.let {
             Avatar(
-                data = imageUri,
+                data = it,
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxHeight()
@@ -385,12 +405,37 @@ fun ForumInfoChip(
                 shape = RoundedCornerShape(4.dp)
             )
         }
-        Text(
-            text = stringResource(id = R.string.title_forum_name, name),
-            style = MaterialTheme.typography.body2,
-            color = ExtendedTheme.colors.onChip,
-            fontSize = 12.sp,
-        )
+        if (imageUri != null) {
+            Text(
+                text = stringResource(id = R.string.title_forum_name, name),
+                style = MaterialTheme.typography.body2,
+                color = ExtendedTheme.colors.onChip,
+                fontSize = 12.sp,
+            )
+        }else{
+            val textColor = RGBA(117,88,254)
+            Split(width = 16.dp)
+            CenterRow(Modifier
+                .wrapContentWidth()
+                .height(26.dp)
+                .border(1.dp,textColor, CircleShape)
+                .clip(CircleShape))
+            {
+                Split(width = 9.dp)
+                Image(
+                    painterResource(R.drawable.person_forum_icon),
+                    contentDescription = null,
+                    modifier = Modifier.size(16.dp)
+                )
+                Split(width = 5.dp)
+                Text(
+                    text = name,
+                    color = textColor,
+                    fontSize = 12.sp
+                )
+                Split(width = 9.dp)
+            }
+        }
     }
 }
 
@@ -629,35 +674,36 @@ fun OriginThreadCard(
 
 @Composable
 private fun ThreadForumInfo(
-    item: ImmutableHolder<ThreadInfo>,
-    onClick: (SimpleForum) -> Unit,
-) {
-    val hasForumInfo = remember(item) { item.isNotNull { forumInfo } }
-    if (hasForumInfo) {
-        val forumInfo = remember(item) { item.getImmutable { forumInfo!! } }
-        ThreadForumInfo(
-            forumName = forumInfo.get { name },
-            forumAvatar = forumInfo.get { avatar },
-            onClick = { onClick(forumInfo.get()) }
-        )
-    }
-}
-
-@Composable
-private fun ThreadForumInfo(
-    forumName: String,
-    forumAvatar: String?,
+    item: ImmutableHolder<*>,
     onClick: () -> Unit,
 ) {
-    val hasForum = remember(forumName) { forumName.isNotBlank() }
-    if (hasForum) {
+    var forumInfo:Any? = null
+    var forumName:String = ""
+    when (val objectItem = item.item) {
+        is ThreadInfo -> {
+            forumInfo = objectItem.forumInfo
+            forumName = objectItem.forumName
+        }
+        is PostInfoList -> {
+            forumInfo = objectItem
+            forumName = objectItem.forum_name
+        }
+        is SearchThreadBean.ThreadInfoBean -> {
+            forumInfo = objectItem
+            forumName = objectItem.forumName
+        }
+    }
+    val hasForumInfo = forumInfo != null
+    val hasForumName = forumName.isNotEmpty()
+    if (hasForumName && hasForumInfo){
         ForumInfoChip(
-            imageUriProvider = { forumAvatar },
-            nameProvider = { forumName },
+            item = forumInfo,
             onClick = onClick
         )
     }
+
 }
+
 
 @Composable
 fun ThreadReplyBtn(
@@ -756,16 +802,14 @@ fun FeedCard(
 ) {
     Card(
         header = {
-            val author = remember(item) { item.getNullableImmutable { author } }
-            author?.let {
-                UserHeader(
-                    userProvider = { it },
-                    timeProvider = { item.get { lastTimeInt } },
-                    onClick = {
-                        onClickUser(it.get())
-                    },
-                ) { dislikeAction() }
-            }
+            ThreadForumInfo(
+                item = item,
+                onClick = {
+                    item.get { forumInfo }?.let {
+                        onClickForum(it)
+                    }
+                }
+            )
         },
         content = {
             ThreadContent(
@@ -776,11 +820,9 @@ fun FeedCard(
                 showAbstract = item.get { abstractText.isNotBlank() },
                 isGood = item.get { isGood == 1 },
             )
-
             ThreadMedia(
                 item = item,
             )
-
             item.getNullableImmutable { origin_thread_info }
                 .takeIf { item.get { is_share_thread } == 1 }?.let {
                     OriginThreadCard(
@@ -794,8 +836,16 @@ fun FeedCard(
                             .padding(16.dp)
                     )
                 }
-
-            ThreadForumInfo(item = item, onClick = onClickForum)
+            val author = remember(item) { item.getNullableImmutable { author } }
+            author?.let {
+                UserHeader(
+                    userProvider = { it },
+                    timeProvider = { item.get { lastTimeInt } },
+                    onClick = {
+                        onClickUser(it.get())
+                    },
+                ) { dislikeAction() }
+            }
         },
         action = {
             Row(modifier = Modifier.fillMaxWidth()) {
@@ -804,13 +854,11 @@ fun FeedCard(
                     onClick = {},
                     modifier = Modifier.weight(1f)
                 )
-
                 ThreadReplyBtn(
                     replyNum = item.get { replyNum },
                     onClick = { onClickReply(item.get()) },
                     modifier = Modifier.weight(1f)
                 )
-
                 ThreadAgreeBtn(
                     hasAgree = item.get { agree?.hasAgree == 1 },
                     agreeNum = item.get { agreeNum },
@@ -876,10 +924,8 @@ fun FeedCard(
                             .padding(16.dp)
                     )
                 }
-
             ThreadForumInfo(
-                forumName = item.get { forum_name },
-                forumAvatar = null,
+                item = item,
                 onClick = { onClickForum(item.get { forum_name }) }
             )
         },

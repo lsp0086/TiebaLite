@@ -148,7 +148,7 @@ private fun ForumItemContent(
             )
             HorizontalDivider(Modifier.height(5.dp))
             Text(
-                color = RGBA(141,141,141,1f),
+                color = RGBA(141,141,141),
                 text = buildString {
                     append("热度 ")
                     append(
@@ -689,7 +689,7 @@ fun ExplorePage(
                                 Row(Modifier.width(3.dp)) {  }
                                 Text(text = if (showFollowedType == 0) "默认排序" else "等级排序",
                                     fontSize = 12.sp,
-                                    color = RGBA(168,168,168,1f),
+                                    color = RGBA(168,168,168),
                                     modifier = Modifier.onClickable
                                 {
                                         viewModel.send(
@@ -748,7 +748,7 @@ fun ExplorePage(
                                                 append(" " + if (showAllFollowed) "▲" else "▼")
                                             },
                                             fontSize = 12.sp,
-                                            color = RGBA(168,168,168,1f)
+                                            color = RGBA(168,168,168)
                                         )
                                     }
                                 }

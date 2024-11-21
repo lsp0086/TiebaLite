@@ -1,6 +1,8 @@
 package com.huanchengfly.tieba.post.ui.page.user.post
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,11 +10,16 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
@@ -28,15 +35,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastForEach
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.RGBA
 import com.huanchengfly.tieba.post.api.models.protos.PostInfoList
 import com.huanchengfly.tieba.post.arch.GlobalEvent
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
@@ -53,6 +64,7 @@ import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.UserProfilePageDestination
 import com.huanchengfly.tieba.post.ui.widgets.compose.Button
 import com.huanchengfly.tieba.post.ui.widgets.compose.Card
+import com.huanchengfly.tieba.post.ui.widgets.compose.CenterRow
 import com.huanchengfly.tieba.post.ui.widgets.compose.Container
 import com.huanchengfly.tieba.post.ui.widgets.compose.ErrorScreen
 import com.huanchengfly.tieba.post.ui.widgets.compose.FeedCard
@@ -60,6 +72,7 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.FeedCardPlaceholder
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
 import com.huanchengfly.tieba.post.ui.widgets.compose.LoadMoreLayout
 import com.huanchengfly.tieba.post.ui.widgets.compose.MyLazyColumn
+import com.huanchengfly.tieba.post.ui.widgets.compose.Split
 import com.huanchengfly.tieba.post.ui.widgets.compose.TipScreen
 import com.huanchengfly.tieba.post.ui.widgets.compose.UserHeader
 import com.huanchengfly.tieba.post.ui.widgets.compose.states.StateScreen
@@ -303,16 +316,20 @@ private fun UserPostList(
     onClickForum: (name: String) -> Unit = {},
     onClickOriginThread: (threadId: Long) -> Unit = {},
 ) {
-    MyLazyColumn(state = lazyListState) {
+    MyLazyColumn(state = lazyListState, modifier = Modifier.background(RGBA(242,242,242))) {
         items(
             items = data,
             key = {
                 "${it.data.get { thread_id }}_${it.data.get { post_id }}"
             }
         ) { itemData ->
+            Split(height = 10.dp)
             Container(fluid = fluid) {
                 UserPostItem(
                     post = itemData,
+                    modifier = Modifier.padding(horizontal = 10.dp).background(Color.White,
+                        RoundedCornerShape(20.dp)
+                    ),
                     onClick = onClickItem,
                     onAgree = onAgreeItem,
                     onClickReply = onClickReply,
@@ -394,20 +411,33 @@ fun UserPostItem(
                         }
                     }
                 }
-
-                Text(
-                    text = item.get { title },
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(6.dp))
-                        .background(ExtendedTheme.colors.floorCard)
-                        .onClickable {
-                            onClickOriginThread(item.get { thread_id })
-                        }
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
-                    style = MaterialTheme.typography.body2,
-                )
+                //117,88,254
+                val textColor = RGBA(117,88,254)
+                Split(width = 9.dp)
+                CenterRow(Modifier
+                    .wrapContentWidth()
+                    .height(26.dp)
+                    .border(1.dp,textColor, CircleShape)
+                    .clip(CircleShape))
+                {
+                    Split(width = 9.dp)
+                    Image(
+                        painterResource(R.drawable.person_forum_icon),
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Split(width = 5.dp)
+                    Text(
+                        text = item.get { title },
+                        modifier = Modifier
+                            .onClickable {
+                                onClickOriginThread(item.get { thread_id })
+                            },
+                        color = textColor,
+                        fontSize = 12.sp
+                    )
+                    Split(width = 9.dp)
+                }
             },
             modifier = modifier,
             contentPadding = PaddingValues(0.dp),

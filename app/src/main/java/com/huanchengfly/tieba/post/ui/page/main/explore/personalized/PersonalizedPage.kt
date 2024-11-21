@@ -42,9 +42,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.RGBA
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
 import com.huanchengfly.tieba.post.api.models.protos.User
 import com.huanchengfly.tieba.post.api.models.protos.personalized.DislikeReason
@@ -71,6 +73,7 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.FeedCard
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
 import com.huanchengfly.tieba.post.ui.widgets.compose.LoadMoreLayout
 import com.huanchengfly.tieba.post.ui.widgets.compose.MyLazyColumn
+import com.huanchengfly.tieba.post.ui.widgets.compose.Split
 import com.huanchengfly.tieba.post.ui.widgets.compose.VerticalDivider
 import com.huanchengfly.tieba.post.ui.widgets.compose.states.StateScreen
 import kotlinx.collections.immutable.ImmutableList
@@ -298,8 +301,11 @@ private fun FeedList(
     MyLazyColumn(
         state = state,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().background(RGBA(242,242,242)),
     ) {
+        item {
+            Split(height = 10.dp)
+        }
         itemsIndexed(
             items = data,
             key = { _, (item) -> "${item.get { id }}" },
@@ -343,6 +349,12 @@ private fun FeedList(
                             Column {
                                 FeedCard(
                                     item = item,
+                                    modifier = Modifier
+                                        .padding(horizontal = 10.dp)
+                                        .background(
+                                            Color.White,
+                                            RoundedCornerShape(20.dp)
+                                        ),
                                     onClick = onItemClick,
                                     onClickReply = onItemReplyClick,
                                     onAgree = onAgree,
@@ -363,10 +375,7 @@ private fun FeedList(
                                     }
                                 }
                                 if (showDivider) {
-                                    VerticalDivider(
-                                        modifier = Modifier.padding(horizontal = 16.dp),
-                                        thickness = 2.dp
-                                    )
+                                    Split(height = 10.dp)
                                 }
                             }
                         }

@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -48,6 +49,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.huanchengfly.tieba.post.R
@@ -193,6 +195,11 @@ fun Toolbar(
 }
 
 @Composable
+fun Split(width:Dp = 0.dp,height:Dp = 0.dp){
+    Row (Modifier.size(width, height)){  }
+}
+
+@Composable
 inline fun CenterBox(
     modifier: Modifier = Modifier,
     propagateMinConstraints: Boolean = false,
@@ -315,10 +322,10 @@ fun Toolbar(
     TopAppBarContainer(
         topBar = {
             Box(Modifier.fillMaxWidth().wrapContentHeight().background(backgroundColor)){
-                ProvideContentColor(color = contentColor) {
-                    navigationIcon?.invoke()
-                }.takeIf { navigationIcon != null }
-                Row (Modifier.align(Alignment.Center)) {
+                CenterRow {
+                    ProvideContentColor(color = contentColor) {
+                        navigationIcon?.invoke()
+                    }.takeIf { navigationIcon != null }
                     ProvideTextStyle(value = MaterialTheme.typography.h6.copy(fontWeight = FontWeight.Bold)) {
                         ProvideContentColor(color = contentColor, content = title)
                     }

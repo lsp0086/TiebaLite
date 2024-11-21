@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -52,6 +53,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
 import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.RGBA
 import com.huanchengfly.tieba.post.api.models.SearchThreadBean
 import com.huanchengfly.tieba.post.arch.BaseComposeActivity
 import com.huanchengfly.tieba.post.onClickable
@@ -165,15 +167,14 @@ fun SearchThreadList(
 ) {
     MyLazyColumn(
         state = lazyListState,
-        modifier = modifier
+        modifier = modifier.background(RGBA(242,242,242))
     ) {
         header()
-        itemsIndexed(data) { index, item ->
-            if (index > 0) {
-                VerticalDivider(modifier = Modifier.padding(horizontal = 16.dp))
-            }
+        items(data) { item ->
+            Split(height = 10.dp)
             SearchThreadItem(
                 item = item,
+                modifier = Modifier.padding(horizontal = 10.dp).background(Color.White, RoundedCornerShape(20.dp)),
                 onClick = onItemClick,
                 onUserClick = onItemUserClick,
                 onForumClick = onItemForumClick,
@@ -236,14 +237,17 @@ fun SearchThreadItem(
     Card(
         modifier = modifier,
         header = {
-            SearchThreadUserHeader(
-                user = item.user,
-                time = item.time,
-                onClick = { onUserClick(item.user) }
-            )
+            if (!hideForum && item.forumName.isNotEmpty()) {
+                ForumInfoChip(
+                    item
+                ) {
+                    onForumClick(item.forumInfo)
+                }
+            }
         },
         content = {
             ThreadContent(
+                modifier = Modifier.padding(vertical = 10.dp),
                 title = item.title,
                 abstractText = item.content,
                 showTitle = item.mainPost == null && item.title.isNotBlank(),
@@ -284,14 +288,12 @@ fun SearchThreadItem(
             } else {
                 SearchMedia(medias = item.media.toImmutableList())
             }
-            if (!hideForum && item.forumName.isNotEmpty()) {
-                ForumInfoChip(
-                    imageUriProvider = { item.forumInfo.avatar },
-                    nameProvider = { item.forumName }
-                ) {
-                    onForumClick(item.forumInfo)
-                }
-            }
+            SearchThreadUserHeader(
+                user = item.user,
+                time = item.time,
+                onClick = { onUserClick(item.user) }
+            )
+
         },
         action = {
             Row(modifier = Modifier.fillMaxWidth()) {

@@ -68,6 +68,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastForEachIndexed
 import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.RGBA
 import com.huanchengfly.tieba.post.api.models.protos.User
 import com.huanchengfly.tieba.post.arch.BaseComposeActivity.Companion.LocalWindowSizeClass
 import com.huanchengfly.tieba.post.arch.GlobalEvent
@@ -833,12 +834,30 @@ private fun UserProfileDetail(
             overflow = TextOverflow.Ellipsis,
             fontWeight = FontWeight.Bold
         )
+        val sexEmoji = when (user.get { sex }) {
+            1 -> "♂"
+            2 -> "♀"
+            else -> null
+        }
+        val sexColor = if (sexEmoji == "♂"){
+            RGBA(151, 188, 255)
+        }else{
+            RGBA(251, 151, 169)
+        }
         ProvideTextStyle(value = MaterialTheme.typography.body2) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier.height(IntrinsicSize.Min)
             ) {
+                sexEmoji?.let{
+                    Row {
+                        Text(
+                            text = it,
+                            color = sexColor,
+                        )
+                    }
+                }
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -914,7 +933,7 @@ private fun UserProfileDetail(
             ?.let {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     Icon(
                         imageVector = Icons.Rounded.Verified,
@@ -929,16 +948,11 @@ private fun UserProfileDetail(
                     )
                 }
             }
-        val sexEmoji = when (user.get { sex }) {
-            1 -> "♂"
-            2 -> "♀"
-            else -> "?"
-        }
+
         FlowRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Chip(text = sexEmoji, invertColor = true)
             Chip(
                 text = stringResource(
                     id = R.string.text_profile_user_id,

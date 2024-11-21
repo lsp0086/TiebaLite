@@ -78,9 +78,10 @@ fun UserHeader(
             avatar()
         }
         Spacer(modifier = Modifier.width(8.dp))
-        Column(
+        Row (
             modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(2.dp)
+            horizontalArrangement = Arrangement.spacedBy(2.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             ProvideTextStyle(
                 value = MaterialTheme.typography.subtitle1.merge(
@@ -92,6 +93,7 @@ fun UserHeader(
             ) {
                 name()
             }
+            Split(width = 8.dp)
             if (desc != null) {
                 ProvideTextStyle(
                     value = MaterialTheme.typography.caption.merge(
