@@ -414,7 +414,6 @@ fun ForumInfoChip(
             )
         }else{
             val textColor = RGBA(117,88,254)
-            Split(width = 16.dp)
             CenterRow(Modifier
                 .wrapContentWidth()
                 .height(26.dp)
