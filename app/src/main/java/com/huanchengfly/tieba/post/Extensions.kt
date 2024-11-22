@@ -34,6 +34,7 @@ import com.huanchengfly.tieba.post.utils.MD5Util
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import java.io.File
+import java.util.Optional
 import kotlin.math.roundToInt
 fun RGBA(red:Int,green:Int,blue:Int,alpha:Float = 1f): Color {
     return Color(red,green,blue,(255 * alpha).toInt())

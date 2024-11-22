@@ -416,7 +416,7 @@ fun ForumInfoChip(
             val textColor = RGBA(117,88,254)
             CenterRow(Modifier
                 .wrapContentWidth()
-                .height(26.dp)
+                .height(24.dp)
                 .border(1.dp,textColor, CircleShape)
                 .clip(CircleShape))
             {

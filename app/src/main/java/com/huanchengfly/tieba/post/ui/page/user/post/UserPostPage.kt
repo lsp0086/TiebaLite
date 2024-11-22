@@ -416,7 +416,7 @@ fun UserPostItem(
                 Split(width = 9.dp)
                 CenterRow(Modifier
                     .wrapContentWidth()
-                    .height(26.dp)
+                    .height(24.dp)
                     .border(1.dp,textColor, CircleShape)
                     .clip(CircleShape))
                 {
