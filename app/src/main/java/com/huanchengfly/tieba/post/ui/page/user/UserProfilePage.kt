@@ -254,9 +254,7 @@ private fun UserProfileToolbar(
                 ToolbarUserTitle(user = user)
             }
         },
-        navigationIcon = {
-            BackNavigationIcon(onBackPressed = onBack)
-        },
+        navigationIcon = { BackNavigationIcon(onBackPressed = onBack) },
         actions = {
             user.takeUnless { isSelf }?.let {
                 ClickMenu(
