@@ -36,9 +36,13 @@ import kotlinx.collections.immutable.toImmutableList
 import java.io.File
 import java.util.Optional
 import kotlin.math.roundToInt
+import kotlin.random.Random
+
 fun RGBA(red:Int,green:Int,blue:Int,alpha:Float = 1f): Color {
     return Color(red,green,blue,(255 * alpha).toInt())
 }
+val RandomColor:Color
+    get() = RGBA(Random.nextInt(0,256),Random.nextInt(0,256),Random.nextInt(0,256))
 fun <T> List<T>.customSort(comparator: (T, T) -> Boolean): List<T> {
     val sortedList = this.toMutableList()
     for (i in 0 until sortedList.size - 1) {

@@ -1474,6 +1474,9 @@ fun ThreadPage(
                                                     color = if (isSeeLz) ExtendedTheme.colors.text else ExtendedTheme.colors.textSecondary,
                                                 )
                                             }
+                                            Row {
+
+                                            }
                                         }
                                     }
                                 }

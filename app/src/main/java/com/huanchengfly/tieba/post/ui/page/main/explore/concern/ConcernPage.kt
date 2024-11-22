@@ -2,7 +2,6 @@ package com.huanchengfly.tieba.post.ui.page.main.explore.concern
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -38,7 +37,6 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
 import com.huanchengfly.tieba.post.ui.widgets.compose.LoadMoreLayout
 import com.huanchengfly.tieba.post.ui.widgets.compose.MyLazyColumn
 import com.huanchengfly.tieba.post.ui.widgets.compose.Split
-import com.huanchengfly.tieba.post.ui.widgets.compose.VerticalDivider
 import kotlinx.collections.immutable.persistentListOf
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -98,47 +96,44 @@ fun ConcernPage(
                     key = { _, item -> "${item.recommendType}_${item.threadList?.id}" },
                     contentType = { _, item -> item.recommendType }
                 ) { _, item ->
-
+                    Split(height = 10.dp)
                     Container {
                         if (item.recommendType == 1) {
-                            Split(height = 10.dp)
-                            Column {
-                                FeedCard(
-                                    item = wrapImmutable(item.threadList!!),
-                                    modifier = Modifier.padding(horizontal = 10.dp).background(Color.White,
-                                        RoundedCornerShape(20.dp)
-                                    ),
-                                    onClick = {
-                                        navigator.navigate(
-                                            ThreadPageDestination(
-                                                it.threadId,
-                                                it.forumId,
-                                                threadInfo = it
-                                            )
+                            FeedCard(
+                                item = wrapImmutable(item.threadList!!),
+                                modifier = Modifier.padding(horizontal = 10.dp).background(Color.White,
+                                    RoundedCornerShape(20.dp)
+                                ),
+                                onClick = {
+                                    navigator.navigate(
+                                        ThreadPageDestination(
+                                            it.threadId,
+                                            it.forumId,
+                                            threadInfo = it
                                         )
-                                    },
-                                    onClickReply = {
-                                        navigator.navigate(
-                                            ThreadPageDestination(
-                                                it.threadId,
-                                                it.forumId,
-                                                scrollToReply = true
-                                            )
+                                    )
+                                },
+                                onClickReply = {
+                                    navigator.navigate(
+                                        ThreadPageDestination(
+                                            it.threadId,
+                                            it.forumId,
+                                            scrollToReply = true
                                         )
-                                    },
-                                    onAgree = {
-                                        viewModel.send(
-                                            ConcernUiIntent.Agree(
-                                                it.threadId,
-                                                it.firstPostId,
-                                                it.hasAgree
-                                            )
+                                    )
+                                },
+                                onAgree = {
+                                    viewModel.send(
+                                        ConcernUiIntent.Agree(
+                                            it.threadId,
+                                            it.firstPostId,
+                                            it.hasAgree
                                         )
-                                    },
-                                    onClickForum = { navigator.navigate(ForumPageDestination(it.name)) },
-                                    onClickUser = { navigator.navigate(UserProfilePageDestination(it.id)) },
-                                )
-                            }
+                                    )
+                                },
+                                onClickForum = { navigator.navigate(ForumPageDestination(it.name)) },
+                                onClickUser = { navigator.navigate(UserProfilePageDestination(it.id)) },
+                            )
                         } else {
                             Box {}
                         }

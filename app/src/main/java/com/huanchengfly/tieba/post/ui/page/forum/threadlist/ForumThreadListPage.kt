@@ -64,6 +64,7 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
 import com.huanchengfly.tieba.post.ui.widgets.compose.LoadMoreLayout
 import com.huanchengfly.tieba.post.ui.widgets.compose.LocalSnackbarHostState
 import com.huanchengfly.tieba.post.ui.widgets.compose.MyLazyColumn
+import com.huanchengfly.tieba.post.ui.widgets.compose.Split
 import com.huanchengfly.tieba.post.ui.widgets.compose.VerticalDivider
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -236,7 +237,7 @@ private fun ThreadList(
                     } else {
                         if (index > 0) {
                             if (items[index - 1].thread.get { isTop } == 1) {
-                                Spacer(modifier = Modifier.height(8.dp))
+                                Split(height = 8.dp)
                             }
                             VerticalDivider(modifier = Modifier.padding(horizontal = 16.dp))
                         }
