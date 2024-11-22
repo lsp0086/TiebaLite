@@ -322,21 +322,25 @@ fun Toolbar(
     TopAppBarContainer(
         topBar = {
             Box(Modifier.fillMaxWidth().wrapContentHeight().background(backgroundColor)){
-
-                navigationIcon?.let {
+                if (navigationIcon != null) {
                     CenterRow {
                         ProvideContentColor(color = contentColor) {
-                            it()
+                            navigationIcon()
                         }
                         ProvideTextStyle(value = MaterialTheme.typography.h6.copy(fontWeight = FontWeight.Bold)) {
                             ProvideContentColor(color = contentColor, content = title)
                         }
                     }
-                } ?: run {
-                    Row (Modifier.align(Alignment.CenterEnd).padding(end = 8.dp)) {
-                        ProvideContentColor(color = contentColor) {
-                            actions()
+                } else{
+                    Row (Modifier.align(Alignment.Center)) {
+                        ProvideTextStyle(value = MaterialTheme.typography.h6.copy(fontWeight = FontWeight.Bold)) {
+                            ProvideContentColor(color = contentColor, content = title)
                         }
+                    }
+                }
+                Row (Modifier.align(Alignment.CenterEnd).padding(end = 8.dp)) {
+                    ProvideContentColor(color = contentColor) {
+                        actions()
                     }
                 }
             }
