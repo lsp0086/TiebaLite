@@ -241,7 +241,7 @@ private fun ThreadList(
                             }
                             VerticalDivider(modifier = Modifier.padding(horizontal = 16.dp))
                         }
-                        FeedCard(
+                        FeedFCard(
                             item = holder,
                             onClick = onItemClicked,
                             onClickReply = onItemReplyClicked,
