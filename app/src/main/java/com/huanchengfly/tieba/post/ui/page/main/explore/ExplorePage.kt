@@ -278,12 +278,8 @@ private fun ForumItem(
     }
 }
 
-private fun getGridCells(context: Context, listSingle: Boolean = context.appPreferences.listSingle): GridCells {
-    return if (listSingle) {
-        GridCells.Fixed(1)
-    } else {
-        GridCells.Adaptive(180.dp)
-    }
+private fun getGridCells(context: Context): GridCells {
+    return GridCells.Fixed(1)
 }
 
 @Composable
@@ -467,9 +463,8 @@ fun ExplorePage(
     val isEmpty by remember { derivedStateOf { forums.isEmpty() } }
     val hasTopForum by remember { derivedStateOf { topForums.isNotEmpty() } }
     val showHistoryForum by remember { derivedStateOf { context.appPreferences.explorePageShowHistoryForum && historyForums.isNotEmpty() } }
-    val listSingle by remember { mutableStateOf(context.appPreferences.listSingle) }
     val isError by remember { derivedStateOf { error != null } }
-    val gridCells by remember { derivedStateOf { getGridCells(context, listSingle) } }
+    val gridCells by remember { derivedStateOf { getGridCells(context) } }
 
     onGlobalEvent<GlobalEvent.Refresh>(
         filter = { it.key == "home" }
@@ -547,7 +542,7 @@ fun ExplorePage(
                         )
                     },
                     loadingScreen = {
-                        ExploreSkeletonScreen(listSingle = listSingle, gridCells = gridCells)
+                        ExploreSkeletonScreen(listSingle = true, gridCells = gridCells)
                     },
                     errorScreen = {
                         error?.let { ErrorScreen(error = it) }

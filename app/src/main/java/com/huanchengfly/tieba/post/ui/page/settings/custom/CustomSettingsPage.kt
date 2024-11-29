@@ -271,21 +271,7 @@ fun CustomSettingsPage(
                     summary = stringResource(id = R.string.tip_toolbar_primary_color_summary),
                 )
             }
-            prefsItem {
-                SwitchPref(
-                    key = "listSingle",
-                    title = stringResource(id = R.string.settings_forum_single),
-                    defaultChecked = false,
-                ) {
-                    LeadingIcon {
-                        AvatarIcon(
-                            icon = Icons.Outlined.ViewAgenda,
-                            size = Sizes.Small,
-                            contentDescription = null,
-                        )
-                    }
-                }
-            }
+
             prefsItem {
                 SwitchPref(
                     key = "hideExplore",
