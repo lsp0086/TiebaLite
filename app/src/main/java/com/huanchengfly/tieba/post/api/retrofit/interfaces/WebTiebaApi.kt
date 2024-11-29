@@ -227,10 +227,13 @@ interface WebTiebaApi {
     @FormUrlEncoded
     fun browserWebReplyAsync(
         @Field("ie") ie:String = "utf-8",
+        //吧名
         @Field("kw") kw:String,
         @Field("fid") fid:String,
         @Field("tid") tid:String,
+        //回复id，待确认？
         @Field("quote_id") quoteId:String? = null,
+        //比较迷回复主题贴数字很大但是回复楼中楼就是层数
         @Field("floor_num") floor: String? = null,
         @Field("rich_text") rhText:String = "1",
         @Field("tbs") tbsCode:String,
