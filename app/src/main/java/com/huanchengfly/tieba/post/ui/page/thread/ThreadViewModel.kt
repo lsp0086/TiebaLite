@@ -965,7 +965,7 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
                 )
             }
 
-        object Start : LoadMyLatestReply()
+        data object Start : LoadMyLatestReply()
 
         data class Success(
             val anti: Anti,
@@ -1008,7 +1008,7 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
             }
         }
 
-        object Start : AddFavorite()
+        data object Start : AddFavorite()
 
         data class Success(
             val markPostId: Long,
@@ -1038,9 +1038,9 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
             }
         }
 
-        object Start : RemoveFavorite()
+        data object Start : RemoveFavorite()
 
-        object Success : RemoveFavorite()
+        data object Success : RemoveFavorite()
 
         data class Failure(
             val errorCode: Int,
@@ -1161,7 +1161,7 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
     sealed class DeleteThread : ThreadPartialChange {
         override fun reduce(oldState: ThreadUiState): ThreadUiState = oldState
 
-        object Success : DeleteThread()
+        data object Success : DeleteThread()
 
         data class Failure(
             val errorCode: Int,
